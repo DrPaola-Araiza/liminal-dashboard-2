@@ -15,8 +15,8 @@ function SocialIcon({ path }: { path: string }) {
 export default function Footer() {
     return (
         // 1. Removed top margin (mt-10) and changed background to remove the line
-        <footer className="w-full bg-white py-8">
-            <div className="mx-auto max-w-7xl flex flex-col items-center space-y-2">
+        <footer className="w-full bg-white py-6">
+            <div className="mx-auto max-w-7xl flex flex-col items-center space-y-0">
                 
                 {/* 2. Replaced the placeholder <img> with the next/image <Image> component */}
                 <Image

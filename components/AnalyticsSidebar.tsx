@@ -16,10 +16,10 @@ function NavLink({ href, children, icon }: { href: string, children: React.React
 
 export default function AnalyticsSidebar() {
     return (
-        // The main container is a flex column that fills the height of its parent
-        <aside className="w-64 h-full flex flex-col" aria-label="Sidebar">
-            {/* This top section grows to push the profile section to the bottom */}
-            <div className="px-3 py-4 overflow-y-auto flex-grow">
+        // The main container no longer needs to be a flex column
+        <aside className="w-64 h-full" aria-label="Sidebar">
+            {/* The flex-grow class has been removed from this div */}
+            <div className="px-3 py-4 overflow-y-auto">
                 <div className="flex items-center p-2 text-base font-bold text-gray-900">
                     <span>Analytics</span>
                     <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -44,18 +44,18 @@ export default function AnalyticsSidebar() {
                         <NavLink href="#" icon="🎯">Focus</NavLink>
                     </li>
                 </ul>
-            </div>
-            
-            {/* User Profile Section stays at the bottom */}
-            <div className="p-4 border-t border-gray-200">
-                <h3 className="font-bold text-gray-800">SwinUniversity</h3>
-                <div className="flex items-center justify-between text-gray-600 mt-1">
-                    <span>PaolaAdmin</span>
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H3"></path></svg>
+                
+                {/* === User Profile Section has been MOVED here === */}
+                <div className="p-4 mt-4 border-t border-gray-200">
+                    <h3 className="font-bold text-gray-800">SwinUniversity</h3>
+                    <div className="flex items-center justify-between text-gray-600 mt-1">
+                        <span>PaolaAdmin</span>
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H3"></path></svg>
+                    </div>
+                    <button className="w-full mt-4 px-4 py-2 text-sm font-semibold text-gray-700 bg-gray-200 rounded-lg shadow-sm hover:bg-gray-300">
+                        Manage
+                    </button>
                 </div>
-                <button className="w-full mt-4 px-4 py-2 text-sm font-semibold text-gray-700 bg-gray-200 rounded-lg shadow-sm hover:bg-gray-300">
-                    Manage
-                </button>
             </div>
         </aside>
     );
