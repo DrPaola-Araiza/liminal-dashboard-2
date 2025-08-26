@@ -6,7 +6,7 @@ const insightsData = [
   { icon: '🎮', label: 'Play count', value: '433,845' },
   { icon: '⏳', label: 'Average time using the Calm Category', value: '10 min' },
   { icon: '⭐', label: '4 & 5 Enjoyability Rating', value: '120' },
-  { icon: '�', label: 'Last Month play count', value: '20' },
+  { icon: '🗓️', label: 'Last Month play count', value: '20' },
   { icon: '📈', label: '% Increase in Calm & Relaxed Moods', value: '29.6%' },
   { icon: '📉', label: '% Decrease in Irritated & Anxious Moods', value: '15.8%' },
 ];
