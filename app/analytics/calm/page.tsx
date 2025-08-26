@@ -2,7 +2,8 @@
 import AnalyticsSidebar from "../../../components/AnalyticsSidebar";
 import AnalyticsFilters from "../../../components/AnalyticsFilters";
 import CalmUserInsights from "../../../components/CalmUserInsights";
-import EmotionalShiftChart from "../../../components/EmotionalShiftChart"; // Import the new chart
+// --- RENAMED: Import path and component name have been updated ---
+import CalmEmotionalShiftChart from "../../../components/CalmEmotionalShiftChart"; 
 
 export default function CalmAnalyticsPage() {
   return (
@@ -38,10 +39,10 @@ export default function CalmAnalyticsPage() {
         <div className="mt-8 border-t pt-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               
-              {/* --- NEW CHART ADDED HERE --- */}
               <div className="bg-white p-4 rounded-lg shadow lg:col-span-2">
                 <h3 className="text-xl font-bold text-gray-800 text-center mb-4">Emotion and mental states shifts</h3>
-                <EmotionalShiftChart />
+                {/* --- RENAMED: Component usage updated here --- */}
+                <CalmEmotionalShiftChart />
               </div>
 
               <div className="bg-white p-4 rounded-lg shadow min-h-[300px]">

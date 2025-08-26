@@ -1,7 +1,6 @@
-// components/EmotionalShiftChart.tsx
+// components/CalmEmotionalShiftChart.tsx
 'use client';
 import React from 'react';
-// Note: You may need to install recharts: npm install recharts
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, ReferenceLine } from 'recharts';
 
 // Data based on the image provided
@@ -26,7 +25,8 @@ const afterColors = [
     '#facc15', // Cheerful (yellow)
 ];
 
-export default function EmotionalShiftChart() {
+// --- RENAMED: The function is now called CalmEmotionalShiftChart ---
+export default function CalmEmotionalShiftChart() {
   return (
     <div className="w-full">
         {/* Section Titles */}
@@ -49,14 +49,12 @@ export default function EmotionalShiftChart() {
             <ResponsiveContainer>
                 <BarChart
                     data={emotionData}
-                    // --- CHANGE 1: Increased left margin to show Y-axis label ---
                     margin={{ top: 5, right: 20, left: 20, bottom: 5 }}
                 >
                     <XAxis dataKey="name" tick={{ fontSize: 12 }} />
                     <YAxis label={{ value: 'Percentage (%)', angle: -90, position: 'insideLeft', fontSize: 14, offset: -10 }} />
                     <Tooltip />
                     
-                    {/* --- CHANGE 2: Added vertical divider lines --- */}
                     <ReferenceLine x="Sad" stroke="gray" strokeDasharray="3 3" />
                     <ReferenceLine x="Excited" stroke="gray" strokeDasharray="3 3" />
 
