@@ -18,7 +18,8 @@ const ActivationChart = ({ data, title, afterBarColor, lineColor }: { data: { Be
         <div className="w-full">
             <h4 className="text-center font-semibold text-gray-700">{title}</h4>
             <p className="text-center text-sm text-gray-500 mb-2">(Before and After)</p>
-            <ResponsiveContainer width="100%" height={250}>
+            {/* --- CHANGE: Increased height from 250 to 300 --- */}
+            <ResponsiveContainer width="100%" height={300}>
                 <ComposedChart data={chartData} margin={{ top: 20, right: 20, left: 20, bottom: 5 }}>
                     <XAxis dataKey="name" />
                     <YAxis 
@@ -28,7 +29,8 @@ const ActivationChart = ({ data, title, afterBarColor, lineColor }: { data: { Be
                         interval={0}
                     />
                     <Tooltip formatter={(value: any) => `${value}%`} />
-                    <Bar dataKey="value" name="">
+                    {/* --- CHANGE: Added barSize to make bars wider --- */}
+                    <Bar dataKey="value" name="" barSize={80}>
                         {
                             chartData.map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill={index === 0 ? '#60a5fa' : afterBarColor} />
@@ -57,7 +59,6 @@ export default function CalmMoodActivationChart() {
     <div className="w-full">
         <div className="max-w-4xl mx-auto mb-6">
             <h3 className="text-xl font-bold text-gray-800 text-center">Mood Activation Changes</h3>
-            {/* --- CHANGE: Alignment is now text-left --- */}
             <p className="mt-2 text-gray-600 text-left">
                 The charts below show how experiences in the Liminal Calm category influence high and low activation moods before and after use.
             </p>
@@ -66,7 +67,8 @@ export default function CalmMoodActivationChart() {
                 <li>The right chart presents changes in low activation moods (such as calmness, relaxation, sadness, and boredom).</li>
             </ul>
         </div>
-        <div className="flex flex-col md:flex-row justify-around items-center gap-6">
+        {/* --- CHANGE: Increased gap from gap-6 to gap-12 for more space --- */}
+        <div className="flex flex-col md:flex-row justify-around items-center gap-12">
             <ActivationChart data={highActivationData} title="High Activation Moods" afterBarColor="#f97316" lineColor="#dc2626" />
             <ActivationChart data={lowActivationData} title="Low Activation Moods" afterBarColor="#f97316" lineColor="#16a34a" />
         </div>
