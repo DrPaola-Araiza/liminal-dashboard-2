@@ -1,12 +1,12 @@
-// components/CalmUserInsights.tsx
+// components/EnergyUserInsights.tsx
 import React from 'react';
 
-// A simple data structure for the insight rows
- const insightsData = [
-  { icon: '🎮', label: 'Play count', value: '433,845' },
-  { icon: '⏳', label: 'Average time using the Energy Category', value: '10 min' },
-  { icon: '⭐', label: '4 & 5 Enjoyability Rating', value: '120' },
-  { icon: '🗓️', label: 'Last Month play count', value: '20' },
+// Data for the insight rows, updated for the Energy category
+const insightsData = [
+  { icon: '🎮', label: 'Play count', value: '600,845' },
+  { icon: '⏳', label: 'Average time using the Energy Category', value: '12 min' },
+  { icon: '⭐', label: '4 & 5 Enjoyability Rating', value: '180' },
+  { icon: '🗓️', label: 'Last Month play count', value: '80' },
   { icon: '😊', label: '% Increase in Positive Moods', value: '29.6%' },
   { icon: '😒', label: '% Decrease in Negative Moods', value: '15.8%' },
 ];
@@ -14,18 +14,18 @@ import React from 'react';
 // The component to render a single row in the table
 const InsightRow = ({ icon, label, value, isHeader }: { icon: string, label: string, value: string, isHeader?: boolean }) => (
   <div className={`flex items-center text-sm ${isHeader ? 'bg-teal-700 text-white font-semibold' : 'bg-gray-100 text-gray-800 border-b border-gray-200'}`}>
-    <div className="w-1/3 p-3 flex items-center">
+    <div className="w-2/3 p-3 flex items-center">
       <span className="mr-3 text-lg">{icon}</span>
       <span>{label}</span>
     </div>
-    <div className="w-2/3 p-3 font-bold text-right">
+    <div className="w-1/3 p-3 font-bold text-right">
       {value}
     </div>
   </div>
 );
 
 // The main component for the user insights table
-export default function CalmUserInsights() {
+export default function EnergyUserInsights() {
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden max-w-2xl mx-auto">
       <h3 className="text-xl font-bold text-gray-800 p-4">User insights</h3>
