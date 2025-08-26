@@ -2,8 +2,8 @@
 import AnalyticsSidebar from "../../../components/AnalyticsSidebar";
 import AnalyticsFilters from "../../../components/AnalyticsFilters";
 import CalmUserInsights from "../../../components/CalmUserInsights";
-// --- RENAMED: Import path and component name have been updated ---
-import CalmEmotionalShiftChart from "../../../components/CalmEmotionalShiftChart"; 
+import CalmEmotionalShiftChart from "../../../components/CalmEmotionalShiftChart";
+import CalmMoodActivationChart from "../../../components/CalmMoodActivationChart"; // Import the new component
 
 export default function CalmAnalyticsPage() {
   return (
@@ -41,13 +41,12 @@ export default function CalmAnalyticsPage() {
               
               <div className="bg-white p-4 rounded-lg shadow lg:col-span-2">
                 <h3 className="text-xl font-bold text-gray-800 text-center mb-4">Emotion and mental states shifts</h3>
-                {/* --- RENAMED: Component usage updated here --- */}
                 <CalmEmotionalShiftChart />
               </div>
 
-              <div className="bg-white p-4 rounded-lg shadow min-h-[300px]">
-                <h2 className="font-semibold text-gray-800 mb-4">Calm Preference Chart</h2>
-                <p className="text-gray-500 text-center mt-10">New chart for 'Calm' preferences will go here.</p>
+              {/* --- NEW CHART ADDED HERE --- */}
+              <div className="bg-white p-4 rounded-lg shadow lg:col-span-2">
+                <CalmMoodActivationChart />
               </div>
 
               <div className="bg-white p-4 rounded-lg shadow min-h-[300px]">
