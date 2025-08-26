@@ -3,7 +3,8 @@ import AnalyticsSidebar from "../../../components/AnalyticsSidebar";
 import AnalyticsFilters from "../../../components/AnalyticsFilters";
 import CalmUserInsights from "../../../components/CalmUserInsights";
 import CalmEmotionalShiftChart from "../../../components/CalmEmotionalShiftChart";
-import CalmMoodActivationChart from "../../../components/CalmMoodActivationChart"; // Import the new component
+import CalmMoodActivationChart from "../../../components/CalmMoodActivationChart";
+import CalmEffectiveExperiences from "../../../components/CalmEffectiveExperiences"; // Import the new component
 
 export default function CalmAnalyticsPage() {
   return (
@@ -37,21 +38,20 @@ export default function CalmAnalyticsPage() {
         
         {/* Data visualizations section */}
         <div className="mt-8 border-t pt-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-6">
               
-              <div className="bg-white p-4 rounded-lg shadow lg:col-span-2">
+              <div className="bg-white p-4 rounded-lg shadow">
                 <h3 className="text-xl font-bold text-gray-800 text-center mb-4">Emotion and mental states shifts</h3>
                 <CalmEmotionalShiftChart />
               </div>
 
-              {/* --- NEW CHART ADDED HERE --- */}
-              <div className="bg-white p-4 rounded-lg shadow lg:col-span-2">
+              <div className="bg-white p-4 rounded-lg shadow">
                 <CalmMoodActivationChart />
               </div>
 
-              <div className="bg-white p-4 rounded-lg shadow min-h-[300px]">
-                <h2 className="font-semibold text-gray-800 mb-4">Most Effective 'Calm' Experiences</h2>
-                <p className="text-gray-500 text-center mt-10">New table for the most effective 'Calm' experiences will go here.</p>
+              {/* --- NEW TABLES ADDED HERE --- */}
+              <div className="p-4 rounded-lg">
+                <CalmEffectiveExperiences />
               </div>
 
             </div>
