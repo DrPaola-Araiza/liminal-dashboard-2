@@ -8,7 +8,7 @@ const highActivationData = { Before: 28.3, After: 14.4 };
 const lowActivationData = { Before: 42.5, After: 70.2 };
 
 // A reusable chart component for this section
-const ActivationChart = ({ data, title, afterBarColor, lineColor }: { data: { Before: number, After: number }, title: string, afterBarColor: string, lineColor: string }) => {
+const ActivationChart = ({ data, title, afterBarColor, lineColor, annotation, annotationColor }: { data: { Before: number, After: number }, title: string, afterBarColor: string, lineColor: string, annotation: string, annotationColor: string }) => {
     const chartData = [
         { name: 'Before', value: data.Before },
         { name: 'After', value: data.After }
@@ -16,9 +16,10 @@ const ActivationChart = ({ data, title, afterBarColor, lineColor }: { data: { Be
 
     return (
         <div className="w-full">
+            {/* --- CHANGE: Added annotation above the chart title --- */}
+            <p className={`text-center text-lg font-bold mb-2 ${annotationColor}`}>{annotation}</p>
             <h4 className="text-center font-semibold text-gray-700">{title}</h4>
             <p className="text-center text-sm text-gray-500 mb-2">(Before and After)</p>
-            {/* --- CHANGE: Increased height from 250 to 300 --- */}
             <ResponsiveContainer width="100%" height={300}>
                 <ComposedChart data={chartData} margin={{ top: 20, right: 20, left: 20, bottom: 5 }}>
                     <XAxis dataKey="name" />
@@ -29,7 +30,6 @@ const ActivationChart = ({ data, title, afterBarColor, lineColor }: { data: { Be
                         interval={0}
                     />
                     <Tooltip formatter={(value: any) => `${value}%`} />
-                    {/* --- CHANGE: Added barSize to make bars wider --- */}
                     <Bar dataKey="value" name="" barSize={80}>
                         {
                             chartData.map((entry, index) => (
@@ -67,10 +67,24 @@ export default function CalmMoodActivationChart() {
                 <li>The right chart presents changes in low activation moods (such as calmness, relaxation, sadness, and boredom).</li>
             </ul>
         </div>
-        {/* --- CHANGE: Increased gap from gap-6 to gap-12 for more space --- */}
         <div className="flex flex-col md:flex-row justify-around items-center gap-12">
-            <ActivationChart data={highActivationData} title="High Activation Moods" afterBarColor="#f97316" lineColor="#dc2626" />
-            <ActivationChart data={lowActivationData} title="Low Activation Moods" afterBarColor="#f97316" lineColor="#16a34a" />
+            {/* --- CHANGE: Updated title and added annotation props --- */}
+            <ActivationChart 
+                data={highActivationData} 
+                title="High-Activation Moods (Cheerfulness, Excitement, Irritation, Anxiety)" 
+                afterBarColor="#f97316" 
+                lineColor="#dc2626"
+                annotation="↓ 13.9% decrease after calm experience"
+                annotationColor="text-red-600"
+            />
+            <ActivationChart 
+                data={lowActivationData} 
+                title="Low-Activation Moods (Calmness, Relaxation, Sadness, Boredom)" 
+                afterBarColor="#f97316" 
+                lineColor="#16a34a"
+                annotation="↑ 27.7% increase after calm experience"
+                annotationColor="text-green-600"
+            />
         </div>
     </div>
   );
