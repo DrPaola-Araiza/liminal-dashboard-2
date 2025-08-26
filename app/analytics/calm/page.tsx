@@ -1,9 +1,8 @@
 // app/analytics/calm/page.tsx
 import AnalyticsSidebar from "../../../components/AnalyticsSidebar";
 import AnalyticsFilters from "../../../components/AnalyticsFilters";
-import CalmUserInsights from "../../../components/CalmUserInsights"; // Import the new component
-
-// Note: We have removed the imports for the general chart components.
+import CalmUserInsights from "../../../components/CalmUserInsights";
+import EmotionalShiftChart from "../../../components/EmotionalShiftChart"; // Import the new chart
 
 export default function CalmAnalyticsPage() {
   return (
@@ -18,12 +17,10 @@ export default function CalmAnalyticsPage() {
         <h1 className="text-3xl font-bold text-sky-900">Calm Analytics</h1>
         <p className="mt-2 text-gray-600">Detailed insights and visualizations for the 'Calm' category.</p>
         
-        {/* Reusing the same filters component */}
         <div className="mt-6">
           <AnalyticsFilters />
         </div>
 
-        {/* --- NEW SECTION: Calm Experiences Intro & User Insights --- */}
         <div className="mt-8 border-t pt-6">
             <div className="max-w-4xl mx-auto text-center mb-8">
                 <h2 className="text-2xl font-semibold text-gray-700">Calm Experiences</h2>
@@ -37,13 +34,14 @@ export default function CalmAnalyticsPage() {
             <CalmUserInsights />
         </div>
         
-        {/* Placeholder content for Calm-specific data visualizations */}
+        {/* Data visualizations section */}
         <div className="mt-8 border-t pt-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               
-              <div className="bg-white p-4 rounded-lg shadow min-h-[300px]">
-                <h2 className="font-semibold text-gray-800 mb-4">Calm Emotion Chart</h2>
-                <p className="text-gray-500 text-center mt-10">New chart for 'Calm' emotions will go here.</p>
+              {/* --- NEW CHART ADDED HERE --- */}
+              <div className="bg-white p-4 rounded-lg shadow lg:col-span-2">
+                <h3 className="text-xl font-bold text-gray-800 text-center mb-4">Emotion and mental states shifts</h3>
+                <EmotionalShiftChart />
               </div>
 
               <div className="bg-white p-4 rounded-lg shadow min-h-[300px]">
@@ -51,7 +49,7 @@ export default function CalmAnalyticsPage() {
                 <p className="text-gray-500 text-center mt-10">New chart for 'Calm' preferences will go here.</p>
               </div>
 
-              <div className="bg-white p-4 rounded-lg shadow lg:col-span-2 min-h-[300px]">
+              <div className="bg-white p-4 rounded-lg shadow min-h-[300px]">
                 <h2 className="font-semibold text-gray-800 mb-4">Most Effective 'Calm' Experiences</h2>
                 <p className="text-gray-500 text-center mt-10">New table for the most effective 'Calm' experiences will go here.</p>
               </div>
