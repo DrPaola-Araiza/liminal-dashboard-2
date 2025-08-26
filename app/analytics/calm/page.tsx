@@ -1,6 +1,7 @@
 // app/analytics/calm/page.tsx
 import AnalyticsSidebar from "../../../components/AnalyticsSidebar";
 import AnalyticsFilters from "../../../components/AnalyticsFilters";
+import CalmUserInsights from "../../../components/CalmUserInsights"; // Import the new component
 
 // Note: We have removed the imports for the general chart components.
 
@@ -20,6 +21,20 @@ export default function CalmAnalyticsPage() {
         {/* Reusing the same filters component */}
         <div className="mt-6">
           <AnalyticsFilters />
+        </div>
+
+        {/* --- NEW SECTION: Calm Experiences Intro & User Insights --- */}
+        <div className="mt-8 border-t pt-6">
+            <div className="max-w-4xl mx-auto text-center mb-8">
+                <h2 className="text-2xl font-semibold text-gray-700">Calm Experiences</h2>
+                <p className="mt-2 text-gray-600">
+                    Calm experiences are designed to promote calm and relaxation and lower arousal (activation levels).
+                </p>
+                <p className="mt-2 text-gray-600">
+                    The following visuals present the distribution of emotional states before and after engaging with the Calm Category.
+                </p>
+            </div>
+            <CalmUserInsights />
         </div>
         
         {/* Placeholder content for Calm-specific data visualizations */}
