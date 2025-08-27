@@ -2,7 +2,9 @@
 import AnalyticsSidebar from "../../../components/AnalyticsSidebar";
 import AnalyticsFilters from "../../../components/AnalyticsFilters";
 import EnergyUserInsights from "../../../components/EnergyUserInsights";
-import EnergyEmotionalShiftChart from "../../../components/EnergyEmotionalShiftChart"; // Import the new chart
+import EnergyEmotionalShiftChart from "../../../components/EnergyEmotionalShiftChart";
+import EnergyMoodActivationChart from "../../../components/EnergyMoodActivationChart";
+import EnergyEffectiveExperiences from "../../../components/EnergyEffectiveExperiences"; // Import the new component
 
 export default function EnergyAnalyticsPage() {
   return (
@@ -34,24 +36,22 @@ export default function EnergyAnalyticsPage() {
             <EnergyUserInsights />
         </div>
         
-        {/* Placeholder content for Energy-specific data visualizations */}
+        {/* Data visualizations section */}
         <div className="mt-8 border-t pt-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-6">
               
-              {/* --- NEW CHART ADDED HERE --- */}
-              <div className="bg-white p-4 rounded-lg shadow lg:col-span-2">
+              <div className="bg-white p-4 rounded-lg shadow">
                 <h3 className="text-xl font-bold text-gray-800 text-center mb-4">Emotion and mental states shifts</h3>
                 <EnergyEmotionalShiftChart />
               </div>
 
-              <div className="bg-white p-4 rounded-lg shadow min-h-[300px]">
-                <h2 className="font-semibold text-gray-800 mb-4">Energy Preference Chart</h2>
-                <p className="text-gray-500 text-center mt-10">New chart for 'Energy' preferences will go here.</p>
+              <div className="bg-white p-4 rounded-lg shadow">
+                <EnergyMoodActivationChart />
               </div>
 
-              <div className="bg-white p-4 rounded-lg shadow lg:col-span-2 min-h-[300px]">
-                <h2 className="font-semibold text-gray-800 mb-4">Most Effective 'Energy' Experiences</h2>
-                <p className="text-gray-500 text-center mt-10">New table for the most effective 'Energy' experiences will go here.</p>
+              {/* --- NEW TABLES ADDED HERE --- */}
+              <div className="p-4 rounded-lg">
+                <EnergyEffectiveExperiences />
               </div>
 
             </div>
@@ -60,4 +60,3 @@ export default function EnergyAnalyticsPage() {
     </div>
   );
 }
-
