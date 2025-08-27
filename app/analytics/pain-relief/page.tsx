@@ -1,7 +1,8 @@
 // app/analytics/pain-relief/page.tsx
 import AnalyticsSidebar from "../../../components/AnalyticsSidebar";
 import AnalyticsFilters from "../../../components/AnalyticsFilters";
-import PainReliefUserInsights from "../../../components/PainReliefUserInsights"; // Import the new component
+import PainReliefUserInsights from "../../../components/PainReliefUserInsights";
+import PainTypeDistributionChart from "../../../components/PainTypeDistributionChart"; // Import the new chart
 
 export default function PainReliefAnalyticsPage() {
   return (
@@ -20,7 +21,7 @@ export default function PainReliefAnalyticsPage() {
           <AnalyticsFilters />
         </div>
 
-        {/* --- NEW SECTION: Pain Relief Experiences Intro & User Insights --- */}
+        {/* --- Pain Relief Experiences Intro & User Insights --- */}
         <div className="mt-8 border-t pt-6">
           <PainReliefUserInsights />
         </div>
@@ -29,9 +30,9 @@ export default function PainReliefAnalyticsPage() {
         <div className="mt-8 border-t pt-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               
-              <div className="bg-white p-4 rounded-lg shadow min-h-[300px]">
-                <h2 className="font-semibold text-gray-800 mb-4">Pain Type Distribution</h2>
-                <p className="text-gray-500 text-center mt-10">New chart for 'Pain Type' will go here.</p>
+              {/* --- NEW CHART ADDED HERE --- */}
+              <div className="bg-white p-4 rounded-lg shadow">
+                <PainTypeDistributionChart />
               </div>
 
               <div className="bg-white p-4 rounded-lg shadow min-h-[300px]">
