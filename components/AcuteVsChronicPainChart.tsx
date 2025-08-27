@@ -1,12 +1,40 @@
 // components/AcuteVsChronicPainChart.tsx
 'use client';
 import React from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Label, Legend } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Label, Legend, LabelList } from 'recharts';
 
 const data = [
   { name: 'Before', Acute: 4.0, Chronic: 2.0 },
   { name: 'After', Acute: 2.0, Chronic: 1.5 },
 ];
+
+// --- 1. Our new dynamic label component ---
+const DynamicLineLabel = (props) => {
+  // Recharts provides these props automatically
+  const { x, y, stroke, value, index, viewBox, dy } = props;
+
+  // We only want to render the label once, so we attach it to the first data point (index 0)
+  if (index !== 0) {
+    return null;
+  }
+
+  // Calculate the horizontal center of the chart's plotting area
+  const chartCenterX = viewBox.x + viewBox.width / 2;
+
+  return (
+    <text
+      x={chartCenterX} // Always place it in the horizontal middle of the chart
+      y={y + dy}       // Place it at the line's starting height, plus our vertical offset
+      fill={stroke}
+      fontSize={16}
+      fontWeight="bold"
+      textAnchor="middle"
+    >
+      {value}
+    </text>
+  );
+};
+
 
 export default function AcuteVsChronicPainChart() {
   return (
@@ -32,18 +60,17 @@ export default function AcuteVsChronicPainChart() {
             </YAxis>
             <Tooltip />
             <Legend />
-            <Line type="monotone" dataKey="Acute" stroke="#00BFFF" strokeWidth={3} dot={{ r: 8 }} />
-            <Line type="monotone" dataKey="Chronic" stroke="#FFA500" strokeWidth={3} dot={{ r: 8 }} />
 
-            {/* Annotations --- FIX APPLIED HERE --- */}
-            <Line dataKey="Acute" stroke="none" isAnimationActive={false}>
-              {/* Added dy={-15} to push this label UP */}
-              <Label value="Acute 50% ↓" position="center" dy={-60} fill="#00BFFF" fontSize={16} fontWeight="bold" />
+            {/* --- 2. Lines now use the dynamic label --- */}
+            <Line type="monotone" dataKey="Acute" stroke="#00BFFF" strokeWidth={3} dot={{ r: 8 }}>
+              <LabelList dataKey="Acute" content={<DynamicLineLabel value="Acute 50% ↓" dy={-15} />} />
             </Line>
-            <Line dataKey="Chronic" stroke="none" isAnimationActive={false}>
-              {/* Added dy={15} to push this label DOWN */}
-              <Label value="Chronic 25% ↓" position="center" dy={15} fill="#FFA500" fontSize={16} fontWeight="bold" />
+            <Line type="monotone" dataKey="Chronic" stroke="#FFA500" strokeWidth={3} dot={{ r: 8 }}>
+              <LabelList dataKey="Chronic" content={<DynamicLineLabel value="Chronic 25% ↓" dy={15} />} />
             </Line>
+
+            {/* --- 3. The old static annotation lines have been removed --- */}
+
           </LineChart>
         </ResponsiveContainer>
       </div>
