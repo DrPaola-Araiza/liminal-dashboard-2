@@ -1,6 +1,8 @@
+// app/analytics/awe/page.tsx
 import AnalyticsSidebar from "../../../components/AnalyticsSidebar";
 import AnalyticsFilters from "../../../components/AnalyticsFilters";
-import AweUserInsights from "../../../components/AweUserInsights"; // Import the new component
+import AweUserInsights from "../../../components/AweUserInsights";
+import AweEffectiveExperiences from "../../../components/AweEffectiveExperiences"; // Import the new component
 
 export default function AweAnalyticsPage() {
   return (
@@ -19,26 +21,14 @@ export default function AweAnalyticsPage() {
           <AnalyticsFilters />
         </div>
 
-        {/* --- NEW SECTION: Awe Experiences Intro & User Insights --- */}
+        {/* --- Awe Experiences Intro & User Insights --- */}
         <div className="mt-8 border-t pt-6">
           <AweUserInsights />
         </div>
         
-        {/* Placeholder content for Awe-specific data visualizations */}
+        {/* --- Most Effective Awe Experiences --- */}
         <div className="mt-8 border-t pt-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              
-              <div className="bg-white p-4 rounded-lg shadow min-h-[300px]">
-                <h2 className="font-semibold text-gray-800 mb-4">Awe Emotion Chart</h2>
-                <p className="text-gray-500 text-center mt-10">New chart for 'Awe' emotions will go here.</p>
-              </div>
-
-              <div className="bg-white p-4 rounded-lg shadow min-h-[300px]">
-                <h2 className="font-semibold text-gray-800 mb-4">Most Effective 'Awe' Experiences</h2>
-                <p className="text-gray-500 text-center mt-10">New table for the most effective 'Awe' experiences will go here.</p>
-              </div>
-
-            </div>
+          <AweEffectiveExperiences />
         </div>
       </div>
     </div>
