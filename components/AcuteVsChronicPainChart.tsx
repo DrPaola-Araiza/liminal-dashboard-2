@@ -3,7 +3,6 @@
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Label, Legend } from 'recharts';
 
-// Chart data
 const data = [
   { name: 'Before', Acute: 4.0, Chronic: 2.0 },
   { name: 'After', Acute: 2.0, Chronic: 1.5 },
@@ -33,16 +32,17 @@ export default function AcuteVsChronicPainChart() {
             </YAxis>
             <Tooltip />
             <Legend />
-            {/* These are the visible lines for the chart data */}
             <Line type="monotone" dataKey="Acute" stroke="#00BFFF" strokeWidth={3} dot={{ r: 8 }} />
             <Line type="monotone" dataKey="Chronic" stroke="#FFA500" strokeWidth={3} dot={{ r: 8 }} />
 
-            {/* Invisible lines for placing the centered text labels --- FIX APPLIED HERE --- */}
-            <Line dataKey="Acute" stroke="none" isAnimationActive={false} hide={true}>
-              <Label value="Acute 50% ↓" position="center" dy={-25} fill="#00BFFF" fontSize={16} fontWeight="bold" />
+            {/* Annotations --- FIX APPLIED HERE --- */}
+            <Line dataKey="Acute" stroke="none" isAnimationActive={false}>
+              {/* Added dy={-15} to push this label UP */}
+              <Label value="Acute 50% ↓" position="center" dy={-15} fill="#00BFFF" fontSize={16} fontWeight="bold" />
             </Line>
-            <Line dataKey="Chronic" stroke="none" isAnimationActive={false} hide={true}>
-              <Label value="Chronic 25% ↓" position="center" dy={25} fill="#FFA500" fontSize={16} fontWeight="bold" />
+            <Line dataKey="Chronic" stroke="none" isAnimationActive={false}>
+              {/* Added dy={15} to push this label DOWN */}
+              <Label value="Chronic 25% ↓" position="center" dy={15} fill="#FFA500" fontSize={16} fontWeight="bold" />
             </Line>
           </LineChart>
         </ResponsiveContainer>
