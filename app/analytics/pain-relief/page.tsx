@@ -2,7 +2,8 @@
 import AnalyticsSidebar from "../../../components/AnalyticsSidebar";
 import AnalyticsFilters from "../../../components/AnalyticsFilters";
 import PainReliefUserInsights from "../../../components/PainReliefUserInsights";
-import PainTypeDistributionChart from "../../../components/PainTypeDistributionChart"; // Import the new chart
+import PainTypeDistributionChart from "../../../components/PainTypeDistributionChart";
+import PainIntensityChart from "../../../components/PainIntensityChart"; // Import the new chart
 
 export default function PainReliefAnalyticsPage() {
   return (
@@ -26,16 +27,20 @@ export default function PainReliefAnalyticsPage() {
           <PainReliefUserInsights />
         </div>
         
-        {/* Placeholder content for Pain Relief-specific data visualizations */}
+        {/* Data visualizations section */}
         <div className="mt-8 border-t pt-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               
-              {/* --- NEW CHART ADDED HERE --- */}
               <div className="bg-white p-4 rounded-lg shadow">
                 <PainTypeDistributionChart />
               </div>
 
-              <div className="bg-white p-4 rounded-lg shadow min-h-[300px]">
+              {/* --- NEW CHART ADDED HERE --- */}
+              <div className="bg-white p-4 rounded-lg shadow">
+                <PainIntensityChart />
+              </div>
+
+              <div className="bg-white p-4 rounded-lg shadow min-h-[300px] lg:col-span-2">
                 <h2 className="font-semibold text-gray-800 mb-4">Most Effective 'Pain Relief' Experiences</h2>
                 <p className="text-gray-500 text-center mt-10">New table for 'Pain Relief' experiences will go here.</p>
               </div>
