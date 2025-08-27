@@ -1,11 +1,13 @@
 // components/AweUserInsights.tsx
 import React from 'react';
+import AweIntensityChart from './AweIntensityChart';
+import AweMetricsChart from './AweMetricsChart'; // Import the new chart component
 
 // Data for the insight rows, updated for the Awe category
 const insightsData = [
-  { icon: '👾', label: 'Play count', value: '845' },
+  { icon: '👾', label: 'Play count', value: '433,845' },
   { icon: '⏳', label: 'Average time using the Awe Category', value: '12 min' },
-  { icon: '⭐', label: '4 & 5 Enjoyability Rating', value: '60' },
+  { icon: '⭐', label: '4 & 5 Enjoyability Rating', value: '180' },
   { icon: '🗓️', label: 'Last Month play count', value: '80' },
 ];
 
@@ -46,6 +48,15 @@ export default function AweUserInsights() {
             <InsightRow key={index} icon={item.icon} label={item.label} value={item.value} isHeader={index === 0} />
           ))}
         </div>
+      </div>
+
+      <div className="mt-8">
+        <AweIntensityChart />
+      </div>
+
+      {/* --- NEW CHART ADDED HERE --- */}
+      <div className="mt-12">
+        <AweMetricsChart />
       </div>
     </div>
   );
