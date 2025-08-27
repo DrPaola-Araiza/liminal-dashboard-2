@@ -23,7 +23,6 @@ export default function AcuteVsChronicPainChart() {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
-            {/* --- CHANGE: Added ticks and interval to show all numbers --- */}
             <YAxis 
                 domain={[0, 5]} 
                 ticks={[0, 1, 2, 3, 4, 5]} 
@@ -36,12 +35,14 @@ export default function AcuteVsChronicPainChart() {
             <Line type="monotone" dataKey="Acute" stroke="#00BFFF" strokeWidth={3} dot={{ r: 8 }} />
             <Line type="monotone" dataKey="Chronic" stroke="#FFA500" strokeWidth={3} dot={{ r: 8 }} />
 
-            {/* Annotations */}
+            {/* Annotations --- FIX APPLIED HERE --- */}
             <Line dataKey="Acute" stroke="none" isAnimationActive={false}>
-              <Label value="Acute 50% ↓" position="center" fill="#00BFFF" fontSize={16} fontWeight="bold" />
+              {/* Added dy={-15} to push this label UP */}
+              <Label value="Acute 50% ↓" position="center" dy={-60} fill="#00BFFF" fontSize={16} fontWeight="bold" />
             </Line>
             <Line dataKey="Chronic" stroke="none" isAnimationActive={false}>
-               <Label value="Chronic 25% ↓" position="center" fill="#FFA500" fontSize={16} fontWeight="bold" />
+              {/* Added dy={15} to push this label DOWN */}
+              <Label value="Chronic 25% ↓" position="center" dy={15} fill="#FFA500" fontSize={16} fontWeight="bold" />
             </Line>
           </LineChart>
         </ResponsiveContainer>
