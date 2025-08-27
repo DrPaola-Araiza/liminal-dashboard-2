@@ -1,7 +1,8 @@
 // app/analytics/energy/page.tsx
 import AnalyticsSidebar from "../../../components/AnalyticsSidebar";
 import AnalyticsFilters from "../../../components/AnalyticsFilters";
-import EnergyUserInsights from "../../../components/EnergyUserInsights"; // Import the new component
+import EnergyUserInsights from "../../../components/EnergyUserInsights";
+import EnergyEmotionalShiftChart from "../../../components/EnergyEmotionalShiftChart"; // Import the new chart
 
 export default function EnergyAnalyticsPage() {
   return (
@@ -20,7 +21,6 @@ export default function EnergyAnalyticsPage() {
           <AnalyticsFilters />
         </div>
 
-        {/* --- NEW SECTION: Energy Experiences Intro & User Insights --- */}
         <div className="mt-8 border-t pt-6">
             <div className="max-w-4xl mx-auto text-center mb-8">
                 <h2 className="text-2xl font-semibold text-gray-700">Energy Experiences</h2>
@@ -38,9 +38,10 @@ export default function EnergyAnalyticsPage() {
         <div className="mt-8 border-t pt-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               
-              <div className="bg-white p-4 rounded-lg shadow min-h-[300px]">
-                <h2 className="font-semibold text-gray-800 mb-4">Energy Emotion Chart</h2>
-                <p className="text-gray-500 text-center mt-10">New chart for 'Energy' emotions will go here.</p>
+              {/* --- NEW CHART ADDED HERE --- */}
+              <div className="bg-white p-4 rounded-lg shadow lg:col-span-2">
+                <h3 className="text-xl font-bold text-gray-800 text-center mb-4">Emotion and mental states shifts</h3>
+                <EnergyEmotionalShiftChart />
               </div>
 
               <div className="bg-white p-4 rounded-lg shadow min-h-[300px]">
@@ -59,3 +60,4 @@ export default function EnergyAnalyticsPage() {
     </div>
   );
 }
+
