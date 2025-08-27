@@ -5,13 +5,13 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, Refere
 
 // Data updated for the Energy category with reversed emotion order
 const emotionData = [
-  { name: 'Excited', before: 4.1, after: 2.7 },
-  { name: 'Cheerful', before: 3.9, after: 4.4 },
+  { name: 'Excited', before: 4.1, after: 6.7 },
+  { name: 'Cheerful', before: 3.9, after: 8.4 },
   { name: 'Sad', before: 14.5, after: 4.2 },
   { name: 'Anxious', before: 5.8, after: 3.4 },
-  { name: 'Irritated/Bored', before: 7.6, after: 7.0 },
-  { name: 'Calm', before: 16.3, after: 30.9 },
-  { name: 'Relax', before: 13.3, after: 29.5 },
+  { name: 'Irritated/Bored', before: 7.6, after: 6.0 },
+  { name: 'Calm', before: 6.3, after: 3.9 },
+  { name: 'Relax', before: 6.3, after: 4.5 },
 ];
 
 // Custom colors for the 'after' bars to match the new order
