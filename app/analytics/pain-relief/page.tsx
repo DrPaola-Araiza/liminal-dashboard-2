@@ -3,7 +3,8 @@ import AnalyticsSidebar from "../../../components/AnalyticsSidebar";
 import AnalyticsFilters from "../../../components/AnalyticsFilters";
 import PainReliefUserInsights from "../../../components/PainReliefUserInsights";
 import PainTypeDistributionChart from "../../../components/PainTypeDistributionChart";
-import PainIntensityChart from "../../../components/PainIntensityChart"; // Import the new chart
+import PainIntensityChart from "../../../components/PainIntensityChart";
+import AcuteVsChronicPainChart from "../../../components/AcuteVsChronicPainChart"; // Import the new chart
 
 export default function PainReliefAnalyticsPage() {
   return (
@@ -35,9 +36,16 @@ export default function PainReliefAnalyticsPage() {
                 <PainTypeDistributionChart />
               </div>
 
-              {/* --- NEW CHART ADDED HERE --- */}
               <div className="bg-white p-4 rounded-lg shadow">
                 <PainIntensityChart />
+              </div>
+
+              {/* --- NEW CHART ADDED HERE --- */}
+              <div className="bg-white p-4 rounded-lg shadow lg:col-span-2 flex justify-center">
+                {/* --- CHANGE: Made the container narrower --- */}
+                <div className="w-full max-w-3xl">
+                  <AcuteVsChronicPainChart />
+                </div>
               </div>
 
               <div className="bg-white p-4 rounded-lg shadow min-h-[300px] lg:col-span-2">

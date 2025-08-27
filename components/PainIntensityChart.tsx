@@ -1,7 +1,7 @@
 // components/PainIntensityChart.tsx
 'use client';
 import React from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Label, LabelList } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Label, LabelList, Line } from 'recharts';
 
 const data = [
   { name: 'Before', 'Pain Score': 4.0 },
@@ -10,10 +10,13 @@ const data = [
 
 export default function PainIntensityChart() {
   return (
-    // --- CHANGE: Switched to a light-themed card ---
     <div className="w-full bg-white p-6 rounded-lg shadow">
       <h3 className="text-xl font-bold text-gray-800 text-center mb-2">Pain Intensity Change</h3>
-      <h4 className="text-lg font-semibold text-gray-600 text-center mb-6">Average Overall Pain Intensity</h4>
+      <h4 className="text-lg font-semibold text-gray-600 text-center">Average Overall Pain Intensity</h4>
+      {/* --- NEW ELEMENT ADDED HERE --- */}
+      <p className="text-center text-2xl font-bold text-green-600 mb-4">
+        75% ↓
+      </p>
       <div style={{ width: '100%', height: 300 }}>
         <ResponsiveContainer>
           <AreaChart
@@ -22,7 +25,6 @@ export default function PainIntensityChart() {
               top: 20, right: 30, left: 20, bottom: 20,
             }}
           >
-            {/* --- CHANGE: Added a gradient definition for the area fill --- */}
             <defs>
               <linearGradient id="painGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8}/>
@@ -35,14 +37,12 @@ export default function PainIntensityChart() {
               <Label value="Pain Score (0-5)" angle={-90} position="insideLeft" style={{ textAnchor: 'middle' }} />
             </YAxis>
             <Tooltip />
-            <Area type="monotone" dataKey="Pain Score" stroke="#2e7d32" strokeWidth={3} fillOpacity={1} fill="url(#painGradient)">
-                {/* --- CHANGE: Using LabelList for precise positioning --- */}
+            <Area type="monotone" dataKey="Pain Score" stroke="#2e7d32" strokeWidth={3} fillOpacity={1} fill="url(#painGradient)" />
+            
+            <Line dataKey="Pain Score" stroke="none" isAnimationActive={false}>
                 <LabelList
-                    dataKey="Pain Score"
-                    position="inside"
-                    content={({ viewBox }: any) => {
-                        if (viewBox && viewBox.points) {
-                            const { points } = viewBox;
+                    content={({ points }: any) => {
+                        if (points && points.length > 1) {
                             const midX = (points[0].x + points[1].x) / 2;
                             const midY = (points[0].y + points[1].y) / 2;
                             return (
@@ -54,7 +54,7 @@ export default function PainIntensityChart() {
                         return null;
                     }}
                 />
-            </Area>
+            </Line>
           </AreaChart>
         </ResponsiveContainer>
       </div>
