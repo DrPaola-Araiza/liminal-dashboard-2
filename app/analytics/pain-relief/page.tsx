@@ -4,7 +4,8 @@ import AnalyticsFilters from "../../../components/AnalyticsFilters";
 import PainReliefUserInsights from "../../../components/PainReliefUserInsights";
 import PainTypeDistributionChart from "../../../components/PainTypeDistributionChart";
 import PainIntensityChart from "../../../components/PainIntensityChart";
-import AcuteVsChronicPainChart from "../../../components/AcuteVsChronicPainChart"; // Import the new chart
+import AcuteVsChronicPainChart from "../../../components/AcuteVsChronicPainChart";
+import PainReliefEffectiveExperiences from "../../../components/PainReliefEffectiveExperiences";
 
 export default function PainReliefAnalyticsPage() {
   return (
@@ -40,19 +41,18 @@ export default function PainReliefAnalyticsPage() {
                 <PainIntensityChart />
               </div>
 
-              {/* --- NEW CHART ADDED HERE --- */}
+              {/* --- AcuteVsChronicPainChart Container (width constrained) --- */}
               <div className="bg-white p-4 rounded-lg shadow lg:col-span-2 flex justify-center">
-                {/* --- CHANGE: Made the container narrower --- */}
                 <div className="w-full max-w-3xl">
                   <AcuteVsChronicPainChart />
                 </div>
               </div>
 
-              <div className="bg-white p-4 rounded-lg shadow min-h-[300px] lg:col-span-2">
-                <h2 className="font-semibold text-gray-800 mb-4">Most Effective 'Pain Relief' Experiences</h2>
-                <p className="text-gray-500 text-center mt-10">New table for 'Pain Relief' experiences will go here.</p>
+              {/* --- Pain Relief Tables Container (full width) --- */}
+              <div className="lg:col-span-2 p-4 rounded-lg bg-white shadow">
+                <PainReliefEffectiveExperiences/>
               </div>
-
+              
             </div>
         </div>
       </div>
