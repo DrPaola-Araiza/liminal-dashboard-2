@@ -38,7 +38,7 @@ export default function AcuteVsChronicPainChart() {
             {/* Annotations --- FIX APPLIED HERE --- */}
             <Line dataKey="Acute" stroke="none" isAnimationActive={false}>
               {/* Added dy={-15} to push this label UP */}
-              <Label value="Acute 50% ↓" position="center" dy={-15} fill="#00BFFF" fontSize={16} fontWeight="bold" />
+              <Label value="Acute 50% ↓" position="center" dy={-55} fill="#00BFFF" fontSize={16} fontWeight="bold" />
             </Line>
             <Line dataKey="Chronic" stroke="none" isAnimationActive={false}>
               {/* Added dy={15} to push this label DOWN */}
