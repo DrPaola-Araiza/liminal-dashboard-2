@@ -7,19 +7,19 @@ import Image from 'next/image';
 // Using placeholder images. Replace with your actual image paths.
 const experienceData = [
   {
-    name: 'Aureole Hypnosis',
+    name: 'Splat',
     imageUrl: 'https://placehold.co/150x100/003366/FFFFFF?text=Aureole',
     moodIncrease: '20%',
     rating: 4,
   },
   {
-    name: 'Desert Breeze',
+    name: 'Swing Beats',
     imageUrl: 'https://placehold.co/150x100/FDB813/FFFFFF?text=Desert',
     moodIncrease: '10%',
     rating: 3,
   },
   {
-    name: 'Sojourn',
+    name: 'Foodfight',
     imageUrl: 'https://placehold.co/150x100/4B0082/FFFFFF?text=Sojourn',
     moodIncrease: '8%',
     rating: 4,
