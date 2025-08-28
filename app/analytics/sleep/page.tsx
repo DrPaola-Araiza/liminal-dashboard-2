@@ -3,7 +3,8 @@
 import AnalyticsSidebar from "../../../components/AnalyticsSidebar";
 import AnalyticsFilters from "../../../components/AnalyticsFilters";
 import SleepUserInsights from "../../../components/SleepUserInsights";
-// We will create Sleep-specific charts and tables in the next steps
+// Import the new chart component
+import SleepinessChangeChart from "../../../components/SleepinessChangeChart"; 
 // import SleepQualityChart from "../../../components/SleepQualityChart"; 
 // import MostEffectiveSleepExperiences from "../../../components/MostEffectiveSleepExperiences";
 
@@ -24,6 +25,8 @@ export default function SleepAnalyticsPage() {
 
         <div className="mt-8 border-t pt-6">
           <SleepUserInsights />
+          {/* ADD THE NEW CHART HERE */}
+          <SleepinessChangeChart />
           {/* The other sleep components will go here once we create them */}
         </div>
       </div>
