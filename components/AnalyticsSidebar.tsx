@@ -50,6 +50,9 @@ export default function AnalyticsSidebar() {
                     <li>
                         <NavLink href="/analytics/focus" icon="🎯">Focus</NavLink>
                     </li>
+                    <li>
+    <NavLink href="/analytics/sleep" icon="😴">Sleep</NavLink>
+  </li>
                 </ul>
                 
                 <div className="p-4 mt-4 border-t border-gray-200">
