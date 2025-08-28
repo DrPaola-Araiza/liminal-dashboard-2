@@ -3,6 +3,10 @@
 import AnalyticsSidebar from "../../../components/AnalyticsSidebar";
 import AnalyticsFilters from "../../../components/AnalyticsFilters";
 import FocusUserInsights from "../../../components/FocusUserInsights";
+import FocusImpactChart from "../../../components/FocusImpactChart";
+// Import the new chart component
+import MentalVitalityChart from "../../../components/MentalVitalityChart";
+
 
 export default function FocusAnalyticsPage() {
   return (
@@ -21,6 +25,11 @@ export default function FocusAnalyticsPage() {
 
         <div className="mt-8 border-t pt-6">
           <FocusUserInsights />
+          
+          <FocusImpactChart />
+
+          {/* ADD THE NEW MENTAL VITALITY CHART HERE */}
+          <MentalVitalityChart />
         </div>
       </div>
     </div>
