@@ -6,8 +6,9 @@ import SleepUserInsights from "../../../components/SleepUserInsights";
 import SleepinessChangeChart from "../../../components/SleepinessChangeChart"; 
 import SleepReasonsCharts from "../../../components/SleepReasonsCharts";
 import SleepDurationChart from "../../../components/SleepDurationChart";
-// Import the new chart component
 import SleepEffectivenessChart from "../../../components/SleepEffectivenessChart";
+// Import the new chart component
+import WakingRestChart from "../../../components/WakingRestChart";
 
 
 export default function SleepAnalyticsPage() {
@@ -30,8 +31,9 @@ export default function SleepAnalyticsPage() {
           <SleepinessChangeChart />
           <SleepReasonsCharts />
           <SleepDurationChart />
-          {/* ADD THE NEW CHART HERE */}
           <SleepEffectivenessChart />
+          {/* ADD THE NEW CHART HERE */}
+          <WakingRestChart />
         </div>
       </div>
     </div>
