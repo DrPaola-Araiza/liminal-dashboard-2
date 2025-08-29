@@ -7,8 +7,9 @@ import SleepinessChangeChart from "../../../components/SleepinessChangeChart";
 import SleepReasonsCharts from "../../../components/SleepReasonsCharts";
 import SleepDurationChart from "../../../components/SleepDurationChart";
 import SleepEffectivenessChart from "../../../components/SleepEffectivenessChart";
-// Import the new chart component
 import WakingRestChart from "../../../components/WakingRestChart";
+// 1. Import the new component
+import MostEffectiveSleepExperiences from "../../../components/MostEffectiveSleepExperiences";
 
 
 export default function SleepAnalyticsPage() {
@@ -32,8 +33,9 @@ export default function SleepAnalyticsPage() {
           <SleepReasonsCharts />
           <SleepDurationChart />
           <SleepEffectivenessChart />
-          {/* ADD THE NEW CHART HERE */}
           <WakingRestChart />
+          {/* 2. Add the final component here */}
+          <MostEffectiveSleepExperiences />
         </div>
       </div>
     </div>
