@@ -28,11 +28,11 @@ const ChartDividers = () => (
         {/* This container will hold our sections and dividers */}
         <div className="flex-1 flex">
             {/* Section 1: Positive Emotions (2 items) */}
-            <div className="w-[28.57%]" /> 
+            <div className="w-[29.5%]" /> 
             <div className="w-px h-[calc(100%-20px)] border-r border-dashed border-gray-400" />
             
             {/* Section 2: Negative Emotions (3 items) */}
-            <div className="w-[42.85%]" />
+            <div className="w-[42.1%]" />
             <div className="w-px h-[calc(100%-20px)] border-r border-dashed border-gray-400" />
             
             {/* Section 3: Other Emotions (2 items) */}
