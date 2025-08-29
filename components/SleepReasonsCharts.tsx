@@ -40,11 +40,10 @@ const CustomTooltip = ({ active, payload }: any) => {
   return null;
 };
 
-// --- FIXED: Corrected label function that properly receives all props ---
+// --- Custom label function to render percentage inside the slice ---
 const renderInnerLabel = (props: any) => {
   const { cx, cy, midAngle, innerRadius, outerRadius, percent } = props;
   const RADIAN = Math.PI / 180;
-  // Position the label inside the slice
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
@@ -81,8 +80,10 @@ export default function SleepReasonsCharts() {
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Chart 1: Can't Sleep */}
         <div className="w-full lg:w-1/2 bg-white rounded-lg shadow-md p-4">
-          <h3 className="text-lg font-bold text-gray-800 text-center mb-4 h-16 flex items-center justify-center">
-            Reasons Given by Users Who Selected "Can't Sleep"
+          {/* FIXED: Title split into two lines */}
+          <h3 className="text-lg font-bold text-gray-800 text-center mb-4 h-16 flex flex-col items-center justify-center">
+            <span>Reasons Given by Users Who Selected</span>
+            <span>"Can't Sleep"</span>
           </h3>
           <ResponsiveContainer width="100%" height={350}>
             <PieChart>
@@ -110,8 +111,9 @@ export default function SleepReasonsCharts() {
 
         {/* Chart 2: Preparing to Sleep */}
         <div className="w-full lg:w-1/2 bg-white rounded-lg shadow-md p-4">
-          <h3 className="text-lg font-bold text-gray-800 text-center mb-4 h-16 flex items-center justify-center">
-            Reasons Given by Users Who Selected "Preparing to Sleep"
+          <h3 className="text-lg font-bold text-gray-800 text-center mb-4 h-16 flex flex-col items-center justify-center">
+            <span>Reasons Given by Users Who Selected</span>
+            <span>"Preparing to Sleep"</span>
           </h3>
           <ResponsiveContainer width="100%" height={350}>
             <PieChart>
