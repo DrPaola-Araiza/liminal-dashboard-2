@@ -4,8 +4,10 @@ import AnalyticsSidebar from "../../../components/AnalyticsSidebar";
 import AnalyticsFilters from "../../../components/AnalyticsFilters";
 import SleepUserInsights from "../../../components/SleepUserInsights";
 import SleepinessChangeChart from "../../../components/SleepinessChangeChart"; 
-// Import the new pie charts component
 import SleepReasonsCharts from "../../../components/SleepReasonsCharts";
+import SleepDurationChart from "../../../components/SleepDurationChart";
+// Import the new chart component
+import SleepEffectivenessChart from "../../../components/SleepEffectivenessChart";
 
 
 export default function SleepAnalyticsPage() {
@@ -26,8 +28,10 @@ export default function SleepAnalyticsPage() {
         <div className="mt-8 border-t pt-6">
           <SleepUserInsights />
           <SleepinessChangeChart />
-          {/* ADD THE NEW PIE CHARTS HERE */}
           <SleepReasonsCharts />
+          <SleepDurationChart />
+          {/* ADD THE NEW CHART HERE */}
+          <SleepEffectivenessChart />
         </div>
       </div>
     </div>
