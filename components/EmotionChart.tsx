@@ -1,4 +1,3 @@
-// components/EmotionChart.tsx
 'use client';
 import React from 'react';
 
@@ -6,29 +5,26 @@ import React from 'react';
 function Bubble({
   text,
   percentage,
-  size,
+  sizePx,
   gradient,
   top,
   left,
+  z,
 }: {
   text: string;
   percentage: number;
-  size: string;
-  gradient: string; // expects bg-gradient classes
+  sizePx: number;
+  gradient: string; // tailwind bg-gradient classes
   top: string;
   left: string;
+  z: number;
 }) {
   return (
     <div
       className={`absolute flex flex-col items-center justify-center rounded-full text-white font-semibold
                   shadow-xl ring-1 ring-white/40 hover:scale-[1.05] transition-transform
                   ${gradient}`}
-      style={{
-        width: size,
-        height: size,
-        top,
-        left,
-      }}
+      style={{ width: sizePx, height: sizePx, top, left, zIndex: z }}
     >
       <span className="text-[11px] leading-tight drop-shadow-[0_1px_1px_rgba(0,0,0,.35)]">
         {text}
@@ -51,10 +47,11 @@ function ChartSection({
   bubbles: Array<{
     text: string;
     percentage: number;
-    size: string;
+    sizePx: number;
     gradient: string;
     top: string;
     left: string;
+    z: number;
   }>;
 }) {
   return (
@@ -80,33 +77,168 @@ function ChartSection({
         <div className="absolute top-1/2 left-0 w-full h-px bg-gray-200/60 -translate-y-1/2" />
 
         {bubbles.map((b, i) => (
-          <Bubble key={i} {...b} />
+          <Bubble key={`${b.text}-${i}`} {...b} />
         ))}
       </div>
     </div>
   );
 }
 
+/** ---------- Data (single source of truth) ---------- */
+type Emotion = {
+  name: string;
+  before: number; // %
+  after: number;  // %
+  gradient: string;
+  pos: {
+    before: { top: string; left: string };
+    after: { top: string; left: string };
+  };
+};
+
+const EMOTIONS: Emotion[] = [
+  { name: 'Calm', before: 5, after: 35, gradient: 'bg-gradient-to-tr from-emerald-400 to-emerald-600',
+    pos: { before: { top: '36%', left: '6%' }, after: { top: '42%', left: '6%' } } },
+  { name: 'Excited', before: 5, after: 10, gradient: 'bg-gradient-to-tr from-emerald-300 to-emerald-500',
+    pos: { before: { top: '6%', left: '26%' }, after: { top: '16%', left: '30%' } } },
+  { name: 'Relax', before: 8, after: 15, gradient: 'bg-gradient-to-tr from-teal-500 to-teal-700',
+    pos: { before: { top: '18%', left: '32%' }, after: { top: '11%', left: '60%' } } },
+  { name: 'Pain', before: 18, after: 7, gradient: 'bg-gradient-to-tr from-rose-700 to-rose-900',
+    pos: { before: { top: '22%', left: '76%' }, after: { top: '36%', left: '86%' } } },
+  { name: 'Focus', before: 9, after: 15, gradient: 'bg-gradient-to-tr from-sky-400 to-sky-600',
+    pos: { before: { top: '56%', left: '70%' }, after: { top: '46%', left: '66%' } } },
+  { name: 'Cheerful', before: 6, after: 12, gradient: 'bg-gradient-to-tr from-lime-400 to-emerald-600',
+    pos: { before: { top: '66%', left: '26%' }, after: { top: '66%', left: '30%' } } },
+  { name: 'Rested', before: 7, after: 20, gradient: 'bg-gradient-to-tr from-emerald-300 to-emerald-500',
+    pos: { before: { top: '70%', left: '40%' }, after: { top: '71%', left: '56%' } } },
+  { name: 'Mental vitality', before: 6, after: 18, gradient: 'bg-gradient-to-tr from-sky-500 to-blue-700',
+    pos: { before: { top: '72%', left: '56%' }, after: { top: '70%', left: '76%' } } },
+  { name: 'Sad', before: 26, after: 7, gradient: 'bg-gradient-to-tr from-amber-400 to-amber-600',
+    pos: { before: { top: '78%', left: '12%' }, after: { top: '82%', left: '18%' } } },
+  { name: 'Anxious', before: 28, after: 6, gradient: 'bg-gradient-to-tr from-rose-400 to-rose-600',
+    pos: { before: { top: '52%', left: '10%' }, after: { top: '54%', left: '18%' } } },
+  { name: 'Irritated', before: 20, after: 6, gradient: 'bg-gradient-to-tr from-orange-500 to-rose-600',
+    pos: { before: { top: '15%', left: '45%' }, after: { top: '40%', left: '46%' } } },
+  { name: 'Bored', before: 22, after: 7, gradient: 'bg-gradient-to-tr from-orange-400 to-orange-600',
+    pos: { before: { top: '62%', left: '50%' }, after: { top: '64%', left: '50%' } } },
+];
+
+/** ---------- Sizing helper ---------- */
+function percentToSizePx(p: number, minPx = 54, maxPx = 140, minP = 3, maxP = 40) {
+  const clamped = Math.max(minP, Math.min(maxP, p));
+  const t = (clamped - minP) / (maxP - minP);
+  return Math.round(minPx + t * (maxPx - minPx));
+}
+
+/** ---------- Layout helpers (collision avoidance) ---------- */
+type BubbleDraft = {
+  text: string;
+  percentage: number;
+  sizePx: number;
+  gradient: string;
+  // working coordinates in px
+  x: number; // left in px
+  y: number; // top in px
+  r: number; // radius in px
+};
+
+// convert '42%' -> px (on a 360 canvas)
+const p2px = (s: string, canvas = 360) => (parseFloat(s) / 100) * canvas;
+const px2p = (v: number, canvas = 360) => `${(v / canvas) * 100}%`;
+
+function clampToCircle(b: BubbleDraft, canvas = 360) {
+  const cx = canvas / 2;
+  const cy = canvas / 2;
+  const maxR = canvas / 2 - b.r; // stay inside outer circle
+  const dx = b.x - cx;
+  const dy = b.y - cy;
+  const dist = Math.hypot(dx, dy);
+  if (dist > maxR) {
+    const ux = dx / dist;
+    const uy = dy / dist;
+    b.x = cx + ux * maxR;
+    b.y = cy + uy * maxR;
+  }
+}
+
+function layoutBubbles(
+  bubbles: Array<{ text: string; percentage: number; sizePx: number; gradient: string; top: string; left: string; }>,
+  canvas = 360,
+  padding = 6,
+  iterations = 160
+) {
+  // to working model in px
+  const work: BubbleDraft[] = bubbles.map(b => ({
+    text: b.text,
+    percentage: b.percentage,
+    sizePx: b.sizePx,
+    gradient: b.gradient,
+    x: p2px(b.left, canvas),
+    y: p2px(b.top, canvas),
+    r: b.sizePx / 2,
+  }));
+
+  // iterative pairwise relaxation
+  for (let k = 0; k < iterations; k++) {
+    for (let i = 0; i < work.length; i++) {
+      for (let j = i + 1; j < work.length; j++) {
+        const a = work[i], c = work[j];
+        let dx = c.x - a.x;
+        let dy = c.y - a.y;
+        let d = Math.hypot(dx, dy) || 1e-6;
+        const minDist = a.r + c.r + padding;
+
+        if (d < minDist) {
+          const overlap = minDist - d;
+          // unit vector from a -> c
+          dx /= d; dy /= d;
+          // push both halves
+          const push = overlap / 2;
+          a.x -= dx * push; a.y -= dy * push;
+          c.x += dx * push; c.y += dy * push;
+        }
+      }
+      clampToCircle(work[i], canvas);
+    }
+  }
+
+  // back to % + z-index (smaller on top)
+  return work.map(w => ({
+    text: w.text,
+    percentage: w.percentage,
+    sizePx: w.sizePx,
+    gradient: w.gradient,
+    top: px2p(w.y, canvas),
+    left: px2p(w.x, canvas),
+    z: 1000 - Math.round(w.sizePx), // smaller bubbles render above larger ones
+  }));
+}
+
 /** ---------- Page Component ---------- */
 export default function EmotionChart() {
-  const beforeBubbles = [
-    { text: 'Anxious',   percentage: 28, size: '110px', gradient: 'bg-gradient-to-tr from-rose-400 to-rose-600',   top: '52%', left: '10%' },
-    { text: 'Irritated', percentage: 15, size: '90px',  gradient: 'bg-gradient-to-tr from-orange-500 to-rose-600', top: '15%', left: '45%' },
-    { text: 'Bored',     percentage: 22, size: '100px', gradient: 'bg-gradient-to-tr from-amber-400 to-amber-600', top: '62%', left: '50%' },
-    { text: 'Sad',       percentage: 18, size: '80px',  gradient: 'bg-gradient-to-tr from-yellow-400 to-yellow-600', top: '78%', left: '22%' },
-    { text: 'Pain',      percentage: 7,  size: '62px',  gradient: 'bg-gradient-to-tr from-rose-500 to-rose-800',   top: '30%', left: '76%' },
-    { text: 'Excited',   percentage: 5,  size: '70px',  gradient: 'bg-gradient-to-tr from-emerald-400 to-emerald-600', top: '6%',  left: '26%' },
-    { text: 'Calm',      percentage: 5,  size: '54px',  gradient: 'bg-gradient-to-tr from-emerald-300 to-emerald-500', top: '36%', left: '6%' },
-  ];
+  // build initial (from EMOTIONS)
+  const beforeInit = EMOTIONS.map(e => ({
+    text: e.name,
+    percentage: e.before,
+    sizePx: percentToSizePx(e.before),
+    gradient: e.gradient,
+    top: e.pos.before.top,
+    left: e.pos.before.left,
+    z: 0,
+  }));
+  const afterInit = EMOTIONS.map(e => ({
+    text: e.name,
+    percentage: e.after,
+    sizePx: percentToSizePx(e.after),
+    gradient: e.gradient,
+    top: e.pos.after.top,
+    left: e.pos.after.left,
+    z: 0,
+  }));
 
-  const afterBubbles = [
-    { text: 'Calm',    percentage: 35, size: '124px', gradient: 'bg-gradient-to-tr from-emerald-400 to-emerald-600', top: '42%', left: '6%' },
-    { text: 'Rested',  percentage: 20, size: '104px', gradient: 'bg-gradient-to-tr from-emerald-300 to-emerald-500', top: '71%', left: '56%' },
-    { text: 'Focus',   percentage: 15, size: '92px',  gradient: 'bg-gradient-to-tr from-sky-400 to-sky-600',         top: '46%', left: '66%' },
-    { text: 'Relax',   percentage: 15, size: '112px', gradient: 'bg-gradient-to-tr from-teal-400 to-teal-600',       top: '11%', left: '60%' },
-    { text: 'Excited', percentage: 10, size: '82px',  gradient: 'bg-gradient-to-tr from-emerald-500 to-emerald-700', top: '16%', left: '30%' },
-    { text: 'Cheerful',percentage: 5,  size: '72px',  gradient: 'bg-gradient-to-tr from-yellow-400 to-yellow-600',   top: '66%', left: '30%' },
-  ];
+  // nudge to avoid overlaps (keeps overall layout you chose)
+  const beforeBubbles = layoutBubbles(beforeInit);
+  const afterBubbles  = layoutBubbles(afterInit);
 
   return (
     <div className="mt-10">
@@ -118,8 +250,16 @@ export default function EmotionChart() {
       </p>
 
       <div className="flex flex-row justify-center gap-8 flex-wrap">
-        <ChartSection title="Before" subtitle="Higher arousal / negative cluster dominates" bubbles={beforeBubbles} />
-        <ChartSection title="After"  subtitle="Shift toward calm, rest, and focus"          bubbles={afterBubbles} />
+        <ChartSection
+          title="Before"
+          subtitle="Higher arousal / negative cluster dominates"
+          bubbles={beforeBubbles}
+        />
+        <ChartSection
+          title="After"
+          subtitle="Shift toward calm, rest, and focus"
+          bubbles={afterBubbles}
+        />
       </div>
 
       <div className="mt-10 p-6 rounded-xl text-center max-w-lg mx-auto shadow bg-white">
