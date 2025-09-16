@@ -1,6 +1,6 @@
 'use client';
 
-import * as React from 'react';
+import { useMemo, type ReactNode } from 'react';
 import {
   PieChart,
   Pie,
@@ -9,7 +9,16 @@ import {
   Legend,
   Tooltip,
 } from 'recharts';
-import type { PieLabelRenderProps } from 'recharts';
+
+// Local label-props type (avoids depending on Recharts' TS exports)
+type LabelProps = {
+  cx?: number;
+  cy?: number;
+  midAngle?: number;
+  innerRadius?: number;
+  outerRadius?: number;
+  percent?: number;
+};
 
 export type CategoryItem = {
   label: string;
@@ -31,7 +40,7 @@ const FALLBACK_COLORS = [
 
 const renderPercentLabel = ({
   cx, cy, midAngle, innerRadius, outerRadius, percent,
-}: PieLabelRenderProps): React.ReactNode => {
+}: LabelProps): ReactNode => {
   if (
     percent == null ||
     innerRadius == null ||
@@ -58,7 +67,7 @@ export default function CategoryPreferenceDonut({
   categoryData,
   height = 360,
 }: CategoryPreferenceDonutProps) {
-  const data = React.useMemo(
+  const data = useMemo(
     () => categoryData.map(d => ({ name: d.label, value: d.percentage, hex: d.hex })),
     [categoryData]
   );
@@ -67,13 +76,16 @@ export default function CategoryPreferenceDonut({
     <div className="w-full text-center">
       <h3 className="text-2xl font-semibold text-gray-800">Category Preferences</h3>
       <p className="text-gray-500 font-medium mt-2">
-        WHERE USERS SPEND THE MOST TIME OR USER ENGAGEMENT BY CATEGORY
+        Where Users Spend the Most Time
       </p>
 
       <div style={{ width: '100%', height }}>
         <ResponsiveContainer>
           <PieChart>
-            <Tooltip formatter={(v: unknown) => [`${Number(v).toFixed(1)}%`, 'Engagement'] as [string, string]} />
+            <Tooltip
+              // keep types simple to satisfy stricter TS/ESLint setups
+              formatter={(v: number | string) => [`${Number(v).toFixed(1)}%`, 'Engagement']}
+            />
             <Pie
               data={data}
               dataKey="value"
@@ -90,7 +102,7 @@ export default function CategoryPreferenceDonut({
               {data.map((entry, i) => (
                 <Cell
                   key={`cell-${entry.name}-${i}`}
-                  fill={(entry.hex ?? FALLBACK_COLORS[i % FALLBACK_COLORS.length]) as string}
+                  fill={entry.hex ?? FALLBACK_COLORS[i % FALLBACK_COLORS.length]}
                 />
               ))}
             </Pie>
