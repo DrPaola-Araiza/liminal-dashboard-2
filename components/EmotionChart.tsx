@@ -1,7 +1,8 @@
+// components/EmotionChart.tsx
 'use client';
 import React from 'react';
 
-/** ---------- Reusable Bubble ---------- */
+/** ---------- Reusable Bubble (reports hover to parent) ---------- */
 function Bubble({
   text,
   percentage,
@@ -10,6 +11,8 @@ function Bubble({
   top,
   left,
   z,
+  onHover,
+  onLeave,
 }: {
   text: string;
   percentage: number;
@@ -18,20 +21,51 @@ function Bubble({
   top: string;
   left: string;
   z: number;
+  onHover: (e: React.MouseEvent<HTMLDivElement>) => void;
+  onLeave: () => void;
 }) {
+  // Dynamic label sizing/wrapping (keeps long names inside)
+  const nameFontPx = Math.round(
+    Math.max(9, Math.min(16, sizePx * 0.18, 190 / (text.length + 3)))
+  );
+  const pctFontPx = Math.max(9, Math.min(13, sizePx * 0.14));
+
   return (
     <div
       className={`absolute flex flex-col items-center justify-center rounded-full text-white font-semibold
                   shadow-xl ring-1 ring-white/40 hover:scale-[1.05] transition-transform
                   ${gradient}`}
       style={{ width: sizePx, height: sizePx, top, left, zIndex: z }}
+      onMouseEnter={onHover}
+      onMouseMove={onHover}
+      onMouseLeave={onLeave}
+      title={`${text} · ${percentage}%`} // native fallback
+      aria-label={`${text} · ${percentage}%`}
     >
-      <span className="text-[11px] leading-tight drop-shadow-[0_1px_1px_rgba(0,0,0,.35)]">
+      <div
+        style={{
+          maxWidth: '85%',
+          textAlign: 'center',
+          lineHeight: 1.05,
+          fontSize: nameFontPx,
+          wordBreak: 'break-word',
+          whiteSpace: 'normal',
+          padding: '0 2px',
+          textShadow: '0 1px 1px rgba(0,0,0,.35)',
+        }}
+      >
         {text}
-      </span>
-      <span className="text-[10px] font-normal opacity-95 drop-shadow-[0_1px_1px_rgba(0,0,0,.35)]">
+      </div>
+      <div
+        style={{
+          fontWeight: 500,
+          opacity: 0.95,
+          fontSize: pctFontPx,
+          textShadow: '0 1px 1px rgba(0,0,0,.35)',
+        }}
+      >
         {percentage}%
-      </span>
+      </div>
     </div>
   );
 }
@@ -54,6 +88,31 @@ function ChartSection({
     z: number;
   }>;
 }) {
+  // Tooltip overlay state (rendered ABOVE all bubbles)
+  const [tip, setTip] = React.useState<{
+    show: boolean;
+    x: number;
+    y: number;
+    label: string;
+  }>({ show: false, x: 0, y: 0, label: '' });
+
+  const canvasRef = React.useRef<HTMLDivElement>(null);
+
+  const handleHover = React.useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.currentTarget as HTMLDivElement;
+    const bubbleRect = target.getBoundingClientRect();
+    const canvasRect = canvasRef.current?.getBoundingClientRect();
+    if (!canvasRect) return;
+    const x = bubbleRect.left + bubbleRect.width / 2 - canvasRect.left;
+    const y = bubbleRect.top - canvasRect.top;
+    const label = target.getAttribute('aria-label') || '';
+    setTip({ show: true, x, y, label });
+  }, []);
+
+  const handleLeave = React.useCallback(() => {
+    setTip((t) => ({ ...t, show: false }));
+  }, []);
+
   return (
     <div className="bg-white rounded-2xl shadow-md p-6 w-[430px]">
       <div className="mb-4">
@@ -63,6 +122,7 @@ function ChartSection({
 
       {/* Radar-pool canvas with concentric guide rings */}
       <div
+        ref={canvasRef}
         className="relative rounded-full border border-gray-200/70 mx-auto"
         style={{
           width: 360,
@@ -71,14 +131,32 @@ function ChartSection({
             'radial-gradient(circle at 50% 50%, rgba(59,130,246,.08), rgba(0,0,0,0) 60%), ' +
             'repeating-radial-gradient(circle at 50% 50%, rgba(148,163,184,.25) 0 1px, transparent 1px 36px)',
         }}
+        onMouseLeave={handleLeave}
       >
         {/* Crosshair guides */}
         <div className="absolute left-1/2 top-0 h-full w-px bg-gray-200/60 -translate-x-1/2" />
         <div className="absolute top-1/2 left-0 w-full h-px bg-gray-200/60 -translate-y-1/2" />
 
         {bubbles.map((b, i) => (
-          <Bubble key={`${b.text}-${i}`} {...b} />
+          <Bubble
+            key={`${b.text}-${i}`}
+            {...b}
+            onHover={handleHover}
+            onLeave={handleLeave}
+          />
         ))}
+
+        {/* Tooltip overlay (always above bubbles) */}
+        {tip.show && (
+          <div
+            className="pointer-events-none absolute -translate-x-1/2 -translate-y-full
+                       rounded-md bg-gray-900/90 text-white text-[11px] px-2 py-1 shadow-lg
+                       whitespace-nowrap"
+            style={{ left: tip.x, top: tip.y, zIndex: 5000 }}
+          >
+            {tip.label}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -130,26 +208,27 @@ function percentToSizePx(p: number, minPx = 54, maxPx = 140, minP = 3, maxP = 40
   return Math.round(minPx + t * (maxPx - minPx));
 }
 
-/** ---------- Layout helpers (collision avoidance) ---------- */
+/** ---------- Layout helpers (deterministic collision + springs) ---------- */
 type BubbleDraft = {
   text: string;
   percentage: number;
   sizePx: number;
   gradient: string;
-  // working coordinates in px
   x: number; // left in px
   y: number; // top in px
   r: number; // radius in px
+  ax: number; // anchor x (from your design)
+  ay: number; // anchor y
 };
 
-// convert '42%' -> px (on a 360 canvas)
 const p2px = (s: string, canvas = 360) => (parseFloat(s) / 100) * canvas;
-const px2p = (v: number, canvas = 360) => `${(v / canvas) * 100}%`;
+// round to 3 decimals so SSR === client
+const px2p = (v: number, canvas = 360) => `${((v / canvas) * 100).toFixed(3)}%`;
 
 function clampToCircle(b: BubbleDraft, canvas = 360) {
   const cx = canvas / 2;
   const cy = canvas / 2;
-  const maxR = canvas / 2 - b.r; // stay inside outer circle
+  const maxR = canvas / 2 - b.r;
   const dx = b.x - cx;
   const dy = b.y - cy;
   const dist = Math.hypot(dx, dy);
@@ -161,48 +240,62 @@ function clampToCircle(b: BubbleDraft, canvas = 360) {
   }
 }
 
+/**
+ * Repulsion-based layout with anchor springs (deterministic):
+ * - NO randomness
+ * - rounds output so SSR and client match exactly
+ */
 function layoutBubbles(
   bubbles: Array<{ text: string; percentage: number; sizePx: number; gradient: string; top: string; left: string; }>,
   canvas = 360,
-  padding = 6,
-  iterations = 160
+  padding = 10,
+  iterations = 260,
+  spring = 0.04
 ) {
-  // to working model in px
-  const work: BubbleDraft[] = bubbles.map(b => ({
-    text: b.text,
-    percentage: b.percentage,
-    sizePx: b.sizePx,
-    gradient: b.gradient,
-    x: p2px(b.left, canvas),
-    y: p2px(b.top, canvas),
-    r: b.sizePx / 2,
-  }));
+  const work: BubbleDraft[] = bubbles
+    .map(b => ({
+      text: b.text,
+      percentage: b.percentage,
+      sizePx: b.sizePx,
+      gradient: b.gradient,
+      x: p2px(b.left, canvas),
+      y: p2px(b.top, canvas),
+      r: b.sizePx / 2,
+      ax: p2px(b.left, canvas),
+      ay: p2px(b.top, canvas),
+    }))
+    .sort((a, b) => b.r - a.r);
 
-  // iterative pairwise relaxation
   for (let k = 0; k < iterations; k++) {
     for (let i = 0; i < work.length; i++) {
+      const a = work[i];
+
+      // pairwise repulsion
       for (let j = i + 1; j < work.length; j++) {
-        const a = work[i], c = work[j];
+        const c = work[j];
         let dx = c.x - a.x;
         let dy = c.y - a.y;
-        let d = Math.hypot(dx, dy) || 1e-6;
+        let d = Math.hypot(dx, dy);
         const minDist = a.r + c.r + padding;
 
-        if (d < minDist) {
+        if (d < minDist && d > 0) {
           const overlap = minDist - d;
-          // unit vector from a -> c
-          dx /= d; dy /= d;
-          // push both halves
+          dx /= d; dy /= d; // unit
           const push = overlap / 2;
           a.x -= dx * push; a.y -= dy * push;
           c.x += dx * push; c.y += dy * push;
         }
       }
-      clampToCircle(work[i], canvas);
+
+      // spring gently toward original anchor (keeps your composition)
+      a.x += (a.ax - a.x) * spring;
+      a.y += (a.ay - a.y) * spring;
+
+      // stay inside
+      clampToCircle(a, canvas);
     }
   }
 
-  // back to % + z-index (smaller on top)
   return work.map(w => ({
     text: w.text,
     percentage: w.percentage,
@@ -210,13 +303,58 @@ function layoutBubbles(
     gradient: w.gradient,
     top: px2p(w.y, canvas),
     left: px2p(w.x, canvas),
-    z: 1000 - Math.round(w.sizePx), // smaller bubbles render above larger ones
+    z: 1000 - Math.round(w.sizePx), // smaller on top
   }));
+}
+
+/** ---------- Emotion polarity + subtitles ---------- */
+const POSITIVE = new Set([
+  'Calm', 'Relax', 'Rested', 'Cheerful', 'Excited', 'Focus', 'Mental vitality',
+]);
+const NEGATIVE = new Set([
+  'Anxious', 'Irritated', 'Bored', 'Sad', 'Pain',
+]);
+
+type Totals = { positive: number; negative: number };
+
+function computeTotals(items: Array<{ text: string; percentage: number }>): Totals {
+  return items.reduce<Totals>(
+    (acc, b) => {
+      if (POSITIVE.has(b.text)) acc.positive += b.percentage;
+      else if (NEGATIVE.has(b.text)) acc.negative += b.percentage;
+      return acc;
+    },
+    { positive: 0, negative: 0 }
+  );
+}
+
+function pickBeforeSubtitle(t: Totals, margin = 2) {
+  if (t.positive - t.negative > margin) return 'Positive emotions dominate';
+  if (t.negative - t.positive > margin) return 'Negative emotions dominate';
+  return 'Balanced emotional mix';
+}
+
+function pickAfterSubtitle(
+  before: Totals,
+  after: Totals,
+  margin = 2,
+  shiftThreshold = 4
+) {
+  const afterPosDom = after.positive - after.negative > margin;
+  const afterNegDom = after.negative - after.positive > margin;
+  const posShift = after.positive - before.positive;
+  const negShift = after.negative - before.negative;
+
+  if (afterPosDom && posShift > shiftThreshold) return 'Shift toward positive emotions';
+  if (afterNegDom && negShift > shiftThreshold) return 'Shift toward negative emotions';
+
+  if (afterPosDom) return 'Positive emotions dominate';
+  if (afterNegDom) return 'Negative emotions dominate';
+  return 'Balanced emotional mix';
 }
 
 /** ---------- Page Component ---------- */
 export default function EmotionChart() {
-  // build initial (from EMOTIONS)
   const beforeInit = EMOTIONS.map(e => ({
     text: e.name,
     percentage: e.before,
@@ -236,9 +374,13 @@ export default function EmotionChart() {
     z: 0,
   }));
 
-  // nudge to avoid overlaps (keeps overall layout you chose)
   const beforeBubbles = layoutBubbles(beforeInit);
   const afterBubbles  = layoutBubbles(afterInit);
+
+  const beforeTotals = computeTotals(beforeBubbles);
+  const afterTotals  = computeTotals(afterBubbles);
+  const beforeSubtitle = pickBeforeSubtitle(beforeTotals);
+  const afterSubtitle  = pickAfterSubtitle(beforeTotals, afterTotals);
 
   return (
     <div className="mt-10">
@@ -252,19 +394,23 @@ export default function EmotionChart() {
       <div className="flex flex-row justify-center gap-8 flex-wrap">
         <ChartSection
           title="Before"
-          subtitle="Higher arousal / negative cluster dominates"
+          subtitle={beforeSubtitle}
           bubbles={beforeBubbles}
         />
         <ChartSection
           title="After"
-          subtitle="Shift toward calm, rest, and focus"
+          subtitle={afterSubtitle}
           bubbles={afterBubbles}
         />
       </div>
 
       <div className="mt-10 p-6 rounded-xl text-center max-w-lg mx-auto shadow bg-white">
-        <p className="text-green-700 font-semibold">😊 Positive moods increased by: 53.97%</p>
-        <p className="text-rose-600 font-semibold">😠 Negative moods decreased by: 20.8%</p>
+        <p className="text-green-700 font-semibold">
+          😊 Positive moods increased by: {Math.max(0, (afterTotals.positive - beforeTotals.positive)).toFixed(1)}%
+        </p>
+        <p className="text-rose-600 font-semibold">
+          😠 Negative moods changed by: {(afterTotals.negative - beforeTotals.negative).toFixed(1)}%
+        </p>
       </div>
     </div>
   );
