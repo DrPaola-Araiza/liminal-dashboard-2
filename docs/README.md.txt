@@ -1,5 +1,14 @@
 # Liminal VR Psychometric Dashboard — Handover
 
+
+A Next.js dashboard for psychometric analytics across Liminal VR categories.
+
+## Documentation
+- Handover & guide: [/docs/README.md](./docs/README.md)
+- AI context (machine-readable): [/docs/ai_context.json](./docs/ai_context.json)
+- Tasks / backlog: [/docs/tasks.todo.md](./docs/tasks.todo.md)
+- Changelog: [/docs/changelog.md](./docs/changelog.md)
+
 **Owner:** Paola  
 **Last updated:** 2025-09-17  
 **Branch:** main
