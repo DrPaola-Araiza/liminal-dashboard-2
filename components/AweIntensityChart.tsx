@@ -3,46 +3,81 @@
 import React from 'react';
 import { RadialBarChart, RadialBar, ResponsiveContainer, PolarAngleAxis } from 'recharts';
 
-const data = [{ name: 'Awe Intensity', value: 70 }];
+type Props = {
+  value?: number;             // 0–100
+  height?: number;            // px for the chart area
+  ringThickness?: number;     // px thickness of the ring
+  maxWidthClass?: string;     // tailwind max-width utility for the card
 
-export default function AweIntensityChart() {
+  // 🔤 Text size controls
+  valueFontPx?: number;       // center % number
+  captionFontPx?: number;     // "Reported intensity"
+  sideLabelFontPx?: number;   // "Low" / "High"
+  titleClassName?: string;    // card title
+  subtitleClassName?: string; // card subtitle under title
+};
+
+export default function AweIntensityChart({
+  value = 70,
+  height = 320,
+  ringThickness = 34,
+  maxWidthClass = 'max-w-xl',
+
+  valueFontPx = 40,            // ⬆️ bigger center number
+  captionFontPx = 18,          // ⬆️ bigger caption
+  sideLabelFontPx = 20,        // ⬆️ bigger side labels
+  titleClassName = 'text-lg font-semibold text-gray-800',
+  subtitleClassName = 'relative text-sm text-gray-500 mb-4',
+}: Props) {
+  const data = React.useMemo(() => [{ name: 'Awe Intensity', value }], [value]);
+
   return (
-    <div className="w-full max-w-xs mx-auto">
+    <div className={`w-full ${maxWidthClass} mx-auto`}>
       {/* Card */}
-      <div className="relative bg-white rounded-2xl shadow p-5 overflow-hidden">
+      <div className="relative bg-white rounded-2xl shadow p-6 overflow-hidden">
         {/* Soft backdrop glow */}
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-purple-50 via-white to-white" />
 
         {/* Header */}
         <div className="relative flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
-            <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-purple-100 text-purple-700 text-lg">
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-purple-100 text-purple-700 text-lg">
               ✨
             </span>
-            <h3 className="text-base font-semibold text-gray-800">Awe Intensity</h3>
+            <h3 className={titleClassName}>Awe Intensity</h3>
           </div>
           <span className="text-[11px] px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 font-medium">
             0–100 scale
           </span>
         </div>
-        <p className="relative text-sm text-gray-500 mb-3">
+        <p className={subtitleClassName}>
           Overall user-reported intensity
         </p>
 
         {/* Chart */}
-        <div className="relative" style={{ width: '100%', height: 210 }}>
-          {/* Context labels */}
-          <div className="absolute left-2 top-1/2 -translate-y-1/2 text-[11px] text-gray-400">Low</div>
-          <div className="absolute right-2 top-1/2 -translate-y-1/2 text-[11px] text-gray-400">High</div>
+        <div className="relative" style={{ width: '100%', height }}>
+          {/* Context labels (left/right) */}
+          <div
+            className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400"
+            style={{ fontSize: sideLabelFontPx }}
+          >
+            Low
+          </div>
+          <div
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400"
+            style={{ fontSize: sideLabelFontPx }}
+          >
+            High
+          </div>
 
           <ResponsiveContainer>
             <RadialBarChart
               data={data}
               startAngle={180}
               endAngle={0}
-              innerRadius="72%"
+              innerRadius="58%"       // chunkier ring
               outerRadius="100%"
-              barSize={24}
+              barSize={ringThickness}
             >
               <defs>
                 {/* Progress gradient */}
@@ -90,13 +125,14 @@ export default function AweIntensityChart() {
                 className="[filter:url(#softGlow)]"
               />
 
-              {/* Center value */}
+              {/* Center value + caption (sizes via props) */}
               <text
                 x="50%"
                 y="56%"
                 textAnchor="middle"
                 dominantBaseline="middle"
-                className="text-3xl font-bold fill-purple-900"
+                className="font-extrabold fill-purple-900"
+                style={{ fontSize: valueFontPx }}
               >
                 {`${data[0].value}%`}
               </text>
@@ -105,7 +141,8 @@ export default function AweIntensityChart() {
                 y="72%"
                 textAnchor="middle"
                 dominantBaseline="middle"
-                className="text-[11px] fill-gray-500"
+                className="fill-gray-500"
+                style={{ fontSize: captionFontPx }}
               >
                 Reported intensity
               </text>
@@ -114,7 +151,7 @@ export default function AweIntensityChart() {
         </div>
 
         {/* Footer hint / caption */}
-        <div className="mt-3 text-[11px] text-gray-400">
+        <div className="mt-4 text-[11px] text-gray-400">
           Based on session self-reports across the Awe category.
         </div>
       </div>
