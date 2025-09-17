@@ -8,6 +8,7 @@ A Next.js dashboard for psychometric analytics across Liminal VR categories.
 - AI context (machine-readable): [/docs/ai_context.json](./docs/ai_context.json)
 - Tasks / backlog: [/docs/tasks.todo.md](./docs/tasks.todo.md)
 - Changelog: [/docs/changelog.md](./docs/changelog.md)
+- Master plan: [/docs/MASTER_PLAN.md](./docs/MASTER_PLAN.md)
 
 **Owner:** Paola  
 **Last updated:** 2025-09-17  
@@ -53,3 +54,5 @@ Key components (examples):
 npm install
 npm run dev
 # or: pnpm install && pnpm dev
+
+

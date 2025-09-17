@@ -1,0 +1,289 @@
+Master Plan — Liminal VR Psychometric Dashboard
+
+Owner: Paola
+Repo: liminal-dashboard-2
+Last updated: YYYY-MM-DD
+
+Quick Links
+
+Figma dashboard: https://www.figma.com/design/cabdbohoCBCwUZCm8ggFta/Liminal-New-Psychometrics-Dashboard?node-id=104-437
+
+Handover & Guide: /docs/README.md
+
+AI context (machine-readable): /docs/ai_context.json
+
+Tasks / backlog: /docs/tasks.todo.md
+
+Changelog: /docs/changelog.md
+
+1) Objective
+
+Transition the visually complete (but static) frontend into a fully functional, data-driven web app connected to a Supabase backend, with detailed analytics pages per category.
+
+2) Scope (In & Out)
+
+In scope
+
+Category analytics pages (Calm, Energy, Awe, Pain Relief, Sleep, Focus; more can be added).
+
+Charts: Emotion bubbles, Category Preferences donut, intensity gauges, line/area bars.
+
+Filters (username, organization, date range).
+
+Auth (Supabase), RLS policies, data fetching, export to PDF.
+
+Documentation for humans & AIs (/docs).
+
+Out of scope (for now)
+
+Mobile-native apps, non-web visualizations.
+
+Real-time streaming updates (nice-to-have later).
+
+Complex role hierarchies beyond org admin vs. user.
+
+3) Current Status (Highlights)
+✅ Implemented UI & Components
+
+Awe page polished: AweIntensityChart.tsx enlarged with props for ring size & typography; fixed badge classes.
+
+EmotionChart.tsx reworked: deterministic layout (no SSR randomness), label wrapping/centering, collision/repulsion, overlay tooltip (z-index always on top), data-driven subtitles (dominance/shift).
+
+CategoryPreferenceDonut.tsx (Recharts) with typesafe CategoryItem and percent labels.
+
+Sleep and Focus pages added + sidebar links.
+
+Docs folder added: /docs/README.md, /docs/ai_context.json, /docs/tasks.todo.md, /docs/changelog.md.
+
+⚠️ Known Fixes Completed
+
+Recharts TS import issue (type-only import on its own line).
+
+Next.js hydration mismatch (removed randomness, rounded coords; optional ssr:false available).
+
+4) Architecture Notes
+
+Frontend: Next.js (App Router), React, TypeScript, Tailwind, Recharts.
+
+Backend: Supabase (auth, Postgres, RLS).
+
+Pages: app/analytics/<category>/page.tsx
+
+Components dir: components/*
+
+Docs: docs/* (human + machine readable)
+
+5) Phased Plan
+Phase 1 — Foundation (In Progress)
+
+Goal: Build the complete UI for all pages based on Figma; establish repo, layout, and reusable components.
+
+Status: Core shell + multiple category pages built.
+Completed:
+
+✅ Environment setup (VS Code, Node.js; Windows security adjustments).
+
+✅ Supabase project + sessions table created (baseline).
+
+✅ Git repo + GitHub remote.
+
+✅ Layout & navigation: Header, Footer, app/layout.tsx, sidebar.
+
+✅ Pages: Login, Menu, main Analytics.
+
+✅ General Insights components (per Figma).
+
+✅ Awe, Sleep, Focus pages assembled.
+
+✅ Charts:
+
+EmotionChart.tsx (bubble) — deterministic, hover tooltip, dynamic subtitles.
+
+CategoryPreferenceDonut.tsx (donut) — TS-safe, % labels.
+
+AweIntensityChart.tsx (radial) — bigger ring & text via props.
+
+Remaining (Phase 1):
+
+ Finish any remaining category UIs (if any still pending).
+
+Phase 2 — Backend & Data Integration (Next)
+
+Goal: Replace all placeholder data with real Supabase data.
+
+Task 2.1 — Authentication
+
+Implement Supabase Auth on the Login page.
+
+On success → redirect to /menu; on fail → friendly error.
+
+Task 2.2 — Data Fetching Layer
+Create a typed data service (e.g., lib/data.ts) with functions:
+
+getSessions(params) → raw sessions.
+
+getUserInsights(params) → totals, averages.
+
+getEmotionShifts(params) → before/after aggregates (by category).
+
+getCategoryPreferences(params) → distribution for donut.
+
+getAweIntensity(params) → single 0–100 value.
+
+getFocusImpact(params) / getMentalVitality(params) → series for line charts.
+
+Params include org, user, date range, category.
+
+Task 2.3 — Security (RLS)
+
+Enable RLS on sessions.
+
+Policies:
+
+Users see only their rows.
+
+Org admins see all rows in their org.
+
+Service role (server-side) permitted for admin exports.
+
+Phase 3 — Frontend Interactivity
+
+Goal: Wire live data into components, make filters reactive, add export.
+
+Task 3.1 — Wire Live Data
+
+Each analytics page calls lib/data.ts functions.
+
+Pass data via props to components (no direct DB calls inside charts).
+
+Show loading/empty/error states.
+
+Task 3.2 — Filters
+
+Make Username/Organization/Date filters stateful.
+
+Re-fetch on change; charts refresh automatically.
+
+Keep filter state in URL query (for shareable links) if possible.
+
+Task 3.3 — Export to PDF
+
+Use jspdf (or html2canvas + jspdf) for “Export Report PDF”.
+
+Include page title, selected filters, timestamp.
+
+Phase 4 — Finalization & Deployment
+
+Task 4.1 — QA
+
+Auth flows, permissions.
+
+Data correctness across pages.
+
+Performance budgets (LCP/CLS, chart rendering).
+
+Accessibility (labels, color contrasts).
+
+Task 4.2 — Deploy
+
+Vercel connected to GitHub.
+
+Env vars for Supabase URL/keys.
+
+Point prod/staging to correct DBs.
+
+6) Data Contracts (initial)
+
+To be finalized when wiring API.
+
+Sessions (example)
+
+type Session = {
+  id: string;
+  user_id: string;
+  org_id: string;
+  category: 'Awe'|'Calm'|'Energy'|'Pain Relief'|'Sleep'|'Focus'|string;
+  started_at: string;  // ISO
+  duration_sec: number;
+  emotion_before: Record<string, number>; // { "Anxious": 28, ... }
+  emotion_after: Record<string, number>;
+  awe_value?: number;  // 0–100
+};
+
+
+Emotion polarity sets (used for subtitles)
+
+Positive: Calm, Relax, Rested, Cheerful, Excited, Focus, Mental vitality
+
+Negative: Anxious, Irritated, Bored, Sad, Pain
+
+7) Component Notes & Usage
+
+AweIntensityChart.tsx
+
+Props: value, height, ringThickness, maxWidthClass, typography props.
+
+Make header text bigger by passing:
+
+<AweIntensityChart
+  titleClassName="text-2xl md:text-3xl font-semibold text-gray-800"
+  subtitleClassName="relative text-base md:text-lg text-gray-500 mb-5"
+/>
+
+
+EmotionChart.tsx
+
+Deterministic layout (no hydration issues).
+
+Overlay tooltip with Name · %.
+
+Subtitles change based on positive vs negative dominance/shift.
+
+CategoryPreferenceDonut.tsx
+
+Type: CategoryItem { label: string; percentage: number; hex?: string }
+
+Usage:
+
+<CategoryPreferenceDonut categoryData={data} height={360} />
+
+8) Milestones & Dates (editable)
+
+M1 – Backend wiring (all charts read live data): YYYY-MM-DD
+
+M2 – Filters & export to PDF: YYYY-MM-DD
+
+M3 – QA & Accessibility pass: YYYY-MM-DD
+
+M4 – Production deploy (Vercel): YYYY-MM-DD
+
+9) Risks & Mitigations
+
+Hydration mismatches → keep SSR deterministic; round floats; avoid time-based values.
+
+RLS complexity → start with narrow policies; write integration tests for roles.
+
+Chart performance → aggregate on the server; paginate or limit if needed.
+
+Design drift → keep Figma link current; add screenshot diffs for sign-off.
+
+10) Next Actions (short)
+
+Wire Auth + RLS (Phase 2.1, 2.3).
+
+Build data service (lib/data.ts) and swap components to real data (2.2, 3.1).
+
+Make filters reactive (3.2).
+
+Add Export to PDF (3.3).
+
+Update /docs/tasks.todo.md as items complete.
+
+Change Log Reference
+
+See /docs/changelog.md
+ for detailed per-date changes.
+
+How to edit this plan
+
+Update this file when scope/dates change. Keep /docs/ai_context.json in sync (so any AI assistant has an accurate, machine-readable map).
