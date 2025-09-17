@@ -26,8 +26,9 @@ export default function AweIntensityChart({
   valueFontPx = 40,            // ⬆️ bigger center number
   captionFontPx = 18,          // ⬆️ bigger caption
   sideLabelFontPx = 20,        // ⬆️ bigger side labels
-  titleClassName = 'text-lg font-semibold text-gray-800',
-  subtitleClassName = 'relative text-sm text-gray-500 mb-4',
+titleClassName = 'text-2xl md:text-3xl font-semibold text-gray-800',
+subtitleClassName = 'relative text-base md:text-lg text-gray-500 mb-8',
+
 }: Props) {
   const data = React.useMemo(() => [{ name: 'Awe Intensity', value }], [value]);
 
@@ -41,12 +42,12 @@ export default function AweIntensityChart({
         {/* Header */}
         <div className="relative flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-purple-100 text-purple-700 text-lg">
+            <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-purple-100 text-purple-700 text-lg">
               ✨
             </span>
             <h3 className={titleClassName}>Awe Intensity</h3>
           </div>
-          <span className="text-[11px] px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 font-medium">
+          <span className="text-[2xl] px-3 py-1 rounded-full bg-purple-100 text-purple-700 font-large">
             0–100 scale
           </span>
         </div>
