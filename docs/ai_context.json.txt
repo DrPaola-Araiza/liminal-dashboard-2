@@ -1,0 +1,131 @@
+
+---
+
+## Paste into `docs/ai_context.json`
+```json
+{
+  "project": {
+    "name": "Liminal VR Psychometric Dashboard",
+    "last_updated": "2025-09-17",
+    "repo_root": ".",
+    "package_manager": "npm"
+  },
+  "tech_stack": {
+    "framework": "Next.js (App Router)",
+    "languages": ["TypeScript", "React"],
+    "styling": "Tailwind CSS",
+    "charts": "Recharts"
+  },
+  "routes": [
+    {"path": "/analytics/calm", "file": "app/analytics/calm/page.tsx"},
+    {"path": "/analytics/energy", "file": "app/analytics/energy/page.tsx"},
+    {"path": "/analytics/awe", "file": "app/analytics/awe/page.tsx"},
+    {"path": "/analytics/pain-relief", "file": "app/analytics/pain-relief/page.tsx"},
+    {"path": "/analytics/sleep", "file": "app/analytics/sleep/page.tsx"},
+    {"path": "/analytics/focus", "file": "app/analytics/focus/page.tsx"}
+  ],
+  "navigation": {
+    "sidebar_file": "components/AnalyticsSidebar.tsx",
+    "links": [
+      {"label": "Focus", "href": "/analytics/focus", "icon": "🎯"},
+      {"label": "Sleep", "href": "/analytics/sleep", "icon": "😴"}
+    ]
+  },
+  "components": [
+    {
+      "name": "AweIntensityChart",
+      "file": "components/AweIntensityChart.tsx",
+      "description": "Radial gauge for Awe intensity (0–100).",
+      "props": {
+        "value": "number (0-100)",
+        "height": "number (px)",
+        "ringThickness": "number (px)",
+        "maxWidthClass": "string (Tailwind max-w-*)",
+        "valueFontPx": "number (px)",
+        "captionFontPx": "number (px)",
+        "sideLabelFontPx": "number (px)",
+        "titleClassName": "string (Tailwind classes)",
+        "subtitleClassName": "string (Tailwind classes)"
+      },
+      "notes": [
+        "Change title/subtitle sizes by passing class props from the parent.",
+        "Badge classes: use 'text-sm'/'text-base' and 'font-medium'."
+      ]
+    },
+    {
+      "name": "EmotionChart",
+      "file": "components/EmotionChart.tsx",
+      "description": "Before/After emotion bubbles with deterministic collision layout and overlay tooltip.",
+      "props": {},
+      "invariants": [
+        "No randomness during SSR; positions rounded to 3 decimals.",
+        "Tooltip is a chart-level overlay with high z-index."
+      ]
+    },
+    {
+      "name": "CategoryPreferenceDonut",
+      "file": "components/CategoryPreferenceDonut.tsx",
+      "description": "Recharts donut showing category engagement distribution with percent labels.",
+      "types": {
+        "CategoryItem": {
+            "label": "string",
+            "percentage": "number (0-100)",
+            "hex": "string | optional"
+        }
+      },
+      "props": {
+        "categoryData": "CategoryItem[]",
+        "height": "number (px) | optional"
+      },
+      "notes": [
+        "Type import: 'import type { PieLabelRenderProps } from \"recharts\"' on its own line."
+      ]
+    }
+  ],
+  "pages": {
+    "sleep": {
+      "file": "app/analytics/sleep/page.tsx",
+      "components": [
+        "SleepUserInsights",
+        "SleepinessChangeChart",
+        "SleepReasonsCharts",
+        "SleepDurationChart",
+        "SleepEffectivenessChart",
+        "WakingRestChart",
+        "MostEffectiveSleepExperiences"
+      ]
+    },
+    "focus": {
+      "file": "app/analytics/focus/page.tsx",
+      "components": [
+        "FocusUserInsights",
+        "FocusImpactChart",
+        "MentalVitalityChart",
+        "MostEffectiveFocusExperiences"
+      ]
+    }
+  },
+  "coding_guidelines": {
+    "tailwind": [
+      "Use semantic sizing classes; avoid invalid classes.",
+      "No 'font-large' or 'text-[2xl]'; use 'font-medium'/'text-2xl'."
+    ],
+    "recharts": [
+      "Keep SSR outputs deterministic.",
+      "Separate type-only imports."
+    ],
+    "nextjs": [
+      "If hydration issues appear, check for time/locale/randomness or use dynamic import with ssr:false."
+    ]
+  },
+  "data_contracts": {
+    "emotion_polars": {
+      "positive": ["Calm", "Relax", "Rested", "Cheerful", "Excited", "Focus", "Mental vitality"],
+      "negative": ["Anxious", "Irritated", "Bored", "Sad", "Pain"]
+    }
+  },
+  "backlog_links": {
+    "tasks_file": "docs/tasks.todo.md",
+    "changelog_file": "docs/changelog.md"
+  }
+}

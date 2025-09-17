@@ -1,0 +1,19 @@
+# Tasks / Backlog
+
+## Backend wiring for charts
+- [ ] EmotionChart: replace hard-coded EMOTIONS with API data.
+- [ ] CategoryPreferenceDonut: replace sample categoryData with API data.
+- [ ] AweIntensityChart: fetch value (0–100) from API.
+**AC:** Charts render with fetched data; loading/error states; strict typings for responses.
+
+## Theming
+- [ ] Extract color/gradient palette to a theme module.
+**AC:** All charts import from one theme file.
+
+## Accessibility
+- [ ] Add aria-labels to legends & tables; ensure color-only info has text equivalents.
+**AC:** Axe checks pass for key pages.
+
+## Tests
+- [ ] Visual snapshot tests for EmotionChart/Donut with deterministic inputs.
+**AC:** PR passes snapshots in CI.

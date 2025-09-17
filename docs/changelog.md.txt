@@ -1,0 +1,7 @@
+# Changelog
+
+## 2025-09-17
+- Added CategoryPreferenceDonut (Recharts) with % labels and TS-safe props.
+- Reworked EmotionChart: deterministic layout, overlay tooltip, auto label sizing, data-driven subtitles.
+- AweIntensityChart: size/typography props; fixed Tailwind badge classes; larger defaults.
+- Added Sleep and Focus pages + components; sidebar links.
